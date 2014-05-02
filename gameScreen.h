@@ -16,6 +16,8 @@ using namespace std;
 int xSpace=3;
 int ySpace=2;
 
+//map<char,Card> screenMap;
+
 class gameScreen
 {
  public:
@@ -25,16 +27,17 @@ class gameScreen
   void unhighlightCard(char letter);
   void onOffHighlight(char letter);
   void clearCard(char letter);
-  map<char, Card> screenMap;
+  //map<char, Card> screenMap;
   vector<char> getHighlights();
   gameScreen();
   vector <char> highlightVector;
   void updateDeckSize(Deck deck);
-  void deal(Deck deck);
+  void updatePlayerScores();
+  void deal(Deck &deck);
   //map<char, Card> getScreenMap();
 };
 
-void gameScreen::deal(Deck deck)
+void gameScreen::deal(Deck &deck)
 {
   replaceCard('a',deck.nextCard());
   replaceCard('b',deck.nextCard());
@@ -69,46 +72,65 @@ void gameScreen::updateDeckSize(Deck deck)
   int size=deck.deckSize();
   string cardNo= to_string(size);
   move(1,77);
+  addstr("   ");
+  move(1,77);
   addstr(cardNo.c_str());
+}
+
+void gameScreen::updatePlayerScores()
+{
+  attrset(COLOR_PAIR(5));
+  for (unsigned int i=0; i<playerVector.size(); i++)
+    {
+      move(5+i,75);
+      addstr("     ");
+      move(5+i,75);
+      addstr(to_string(playerVector[i].score).c_str());
+
+    }
+  refresh();
 }
 
 
 void gameScreen::onOffHighlight(char letter)
 {
-  if (highlightVector.size()<3)
+  if (screenMap[letter].id != 99)
     {
-      vector<char>::iterator loc;
-      loc=find(highlightVector.begin(), highlightVector.end(), letter);  
-
-
-      if (loc==highlightVector.end())
+      if (highlightVector.size()<3)
 	{
-	  highlightVector.push_back(letter);
-	  highlightCard(letter);
-      
-	}
-
-      else if (loc!=highlightVector.end())
-	{
-	  highlightVector.erase(loc);
-
-	  unhighlightCard(letter);
+	  vector<char>::iterator loc;
+	  loc=find(highlightVector.begin(), highlightVector.end(), letter);  
 	  
-	}
-    }
 
-  else if (highlightVector.size()==3)
-    {
-      vector<char>::iterator loc;
-      loc=find(highlightVector.begin(), highlightVector.end(), letter);
-      if (loc!=highlightVector.end())
+	  if (loc==highlightVector.end())
+	    {
+	      highlightVector.push_back(letter);
+	      highlightCard(letter);
+	      
+	    }
+
+	  else if (loc!=highlightVector.end())
+	    {
+	      highlightVector.erase(loc);
+	      
+	      unhighlightCard(letter);
+	      
+	    }
+	}
+
+      else if (highlightVector.size()==3)
 	{
-	  highlightVector.erase(loc);
-	  unhighlightCard(letter);
-	}
+	  vector<char>::iterator loc;
+	  loc=find(highlightVector.begin(), highlightVector.end(), letter);
+	  if (loc!=highlightVector.end())
+	    {
+	      highlightVector.erase(loc);
+	      unhighlightCard(letter);
+	    }
         
-    }
+	}
 
+    }
 }
 
 void gameScreen::unhighlightCard(char letter)
@@ -587,6 +609,7 @@ void gameScreen::highlightCard(char letter)
 }
 
 
+
 void gameScreen::replaceCard(char letter, Card card)
 {
   string blankCardLine="               ";
@@ -595,6 +618,18 @@ void gameScreen::replaceCard(char letter, Card card)
   int col= 5;
 
   screenMap[letter]=card;
+
+  /*
+  if (card.id==99)
+    {
+      //map<char, Card>::iterator it;
+      //it= screenMap.find(letter);
+      clearCard(letter);
+      screenMap.erase(letter);
+    }
+  */
+  //else {
+    //screenMap[letter]=card;
 
   switch(letter)
     {
@@ -1084,7 +1119,7 @@ void gameScreen::replaceCard(char letter, Card card)
     default:
       break;
     }
-
+  //}
 
 }
 
@@ -1430,6 +1465,15 @@ void gameScreen::initializeScreen()
   addstr("    SCORES    ");
   move(4,63);
   addstr("--------------");
+
+  for (unsigned int i=0; i<playerVector.size(); i++)
+    {
+      move(5+i,63);
+      addstr(playerVector[i].name.c_str());
+      move(5+i,75);
+      addstr(to_string(playerVector[i].score).c_str());
+
+    }
 
   refresh();
   //sleep(2);

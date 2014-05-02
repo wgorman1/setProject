@@ -7,6 +7,7 @@
 #include "global.h"
 #include <deque>
 #include "global.h"
+#include <map>
 //#include "gameScreen.h"
 using namespace std;
 
@@ -19,13 +20,46 @@ class Deck
   deque<Card> deck;
 
   Deck();
-  Deck(Card cardArray[]);
+  Deck(vector<Card> cardArray);
+  //Deck(Card cardArray[]);
   void shuffle();
   Card nextCard();
   int deckSize();
   void clearAndReshuffle();
   void putBack(Card card);
+  //void checkNextCard();
 };
+
+/*
+void Deck::checkNextCard()
+{
+  if (deck.size()>0)
+    {
+      deck.nextCard();
+    }
+
+  else if (deck.size()==0)
+    {
+      
+    }
+
+}
+*/
+
+int getMapSize()
+{
+  map<char, Card>::iterator it;
+  int s=0;
+  for (it=screenMap.begin(); it!=screenMap.end(); it++)
+    {
+      if (it->second.id != 99)
+	{
+	  s+=1;
+	}
+    }
+
+  return s;
+}
 
 void Deck::putBack(Card card)
 {
@@ -68,7 +102,7 @@ void Deck::clearAndReshuffle()
   putBack(screenMap['k']);
   putBack(screenMap['l']);
   */
-  //deck.shrink_to_fit();
+  deck.shrink_to_fit();
   shuffle();
   /*
   screen.replaceCard('a',deck.nextCard());
@@ -90,17 +124,23 @@ void Deck::clearAndReshuffle()
 
 int Deck::deckSize()
 {
-  return deck.size();
+  int a= getMapSize();
+  return deck.size()+a;
 }
 
 Card Deck::nextCard()
 {
-  //cardNo+=1;
-  Card c=deck[0];
-  deck.pop_front();
-  //deck.erase(deck.begin());
-  //deck.shrink_to_fit();
-  return c;  
+  Card d;
+  if (deck.size()!=0)
+    {
+      //cardNo+=1;
+      Card c=deck[0];
+      //deck.pop_front();
+      deck.erase(deck.begin());
+      //deck.shrink_to_fit();
+      return c;  
+    }
+    return d;
 }
 
 Deck::Deck()
@@ -114,10 +154,10 @@ Deck::Deck()
 }
 
 
-Deck::Deck(Card cardArray[])
+Deck::Deck(vector<Card> cardArray)
 {
   cardNo=0;
-  for (int i=0; i<=80; i++)
+  for (unsigned int i=0; i<cardArray.size(); i++)
     {
       deck.push_back(cardArray[i]);
     }

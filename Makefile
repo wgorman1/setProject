@@ -7,9 +7,9 @@ client:client.cpp
 	c++11 -o client -Wall client.cpp
 
 server:server.cpp
-	c++11 -o server -Wall server.cpp -lpthread -lcurses
+	c++11 -o server -Wall server.cpp
 
-game:game.cpp
+game:game.cpp Card.h Deck.h gameScreen.h global.h Player.h
 	$(CXX) -o game -Wall game.cpp $(LDLIBS)
 
 alt:alt.cpp

@@ -1,10 +1,14 @@
 //Team Lavender
 //Charles Eswine
 
+#define GLOBAL
+
 #include "Card.h"
+//#include "Player.h"
 #include <map>
 
 using namespace std;
 
 extern map<char, Card> screenMap;
-extern int idn;
+extern vector<Player> playerVector;
+//extern int idn;

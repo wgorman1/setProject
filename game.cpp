@@ -35,6 +35,7 @@ using namespace std;
 #include <time.h>
 #include <errno.h>
 #include <cctype>
+#include <map>
 
 #define SOCKET_ERROR        -1
 #define BUFFER_SIZE         100
@@ -42,10 +43,12 @@ using namespace std;
 
 
 Card c;
-map<char, Card> screenMap { {'a',c} {'b',c} {'c',c} {'d',c} {'e',c} {'f',c} {'g',c} {'h',c} {'i',c} {'j',c} {'k',c} {'l',c} };
+//map<char, Card> screenMap { {'a',c}, {'b',c}, {'c',c}, {'d',c}, {'e',c}, {'f',c}, {'g',c}, {'h',c}, {'i',c}, {'j',c}, {'k',c}, {'l',c} };
 
+map<char, Card> screenMap;
+vector<Player> playerVector;
 
-int idn=1;
+//int idn=1;
 
 int millisleep(unsigned msecs) {
   struct timespec t = {msecs / 1000, (msecs % 1000) * 1000000};
@@ -160,22 +163,46 @@ bool noSet()
 {
   int matches=0;
 
-  for (int i=0; i<12; i++)
+  Card test[12];
+  test[0]=screenMap['a'];
+  test[1]=screenMap['b'];
+  test[2]=screenMap['c'];
+  test[3]=screenMap['d'];
+  test[4]=screenMap['e'];
+  test[5]=screenMap['f'];
+  test[6]=screenMap['g'];
+  test[7]=screenMap['h'];
+  test[8]=screenMap['i'];
+  test[9]=screenMap['j'];
+  test[10]=screenMap['k'];
+  test[11]=screenMap['l'];
+
+  for (int x=0; x<12; x++)
     {
-      for (int j=i+1; j<12; j++)
+      for (int y=x+1; y<12; y++)
 	{
-	  for (int k=j+1; k<12; k++)
+	  for (int z=y+1; z<12; z++)
 	    {
-	      
+	      matches=0;
 	      for (int i=0; i<4; i++)
 		{
-		  /*
-		  if ((screen.screenMap[selectedCards[0]].properties[i]==screen.screenMap[selectedCards[1]].properties[i] && screen.screenMap[selectedCards[1]].properties[i]==screen.screenMap[selectedCards[2]].properties[i]) || (screen.screenMap[selectedCards[0]].properties[i]!=screen.screenMap[selectedCards[1]].properties[i] && screen.screenMap[selectedCards[0]].properties[i]!=screen.screenMap[selectedCards[2]].properties[i] && screen.screenMap[selectedCards[1]].properties[i]!=screen.screenMap[selectedCards[2]].properties[i]))
-		  */
+		  
+		  if ((test[x].properties[i]==test[y].properties[i] && test[y].properties[i]==test[z].properties[i]) || (test[x].properties[i]!=test[y].properties[i] && test[x].properties[i]!=test[z].properties[i] && test[y].properties[i]!=test[z].properties[i]))
+		  
 		    {
 		      matches+=1;
 		    }
 
+		}
+	      if (matches==4)
+		{
+		  move(38,0);
+		  //addstr(test[x].id.c_str());
+		  move(39,0);
+                  //addstr(test[y].id.c_str());
+		  move(40,0);
+                  //addstr(test[z].id.c_str());
+		  return false;
 		}
 
 	    }
@@ -186,7 +213,9 @@ bool noSet()
 
 void printMap()
 {
-  cout<<screenMap['a']<<endl;
+  //screenMap['b']=deck.nextCard();
+  screenMap.erase('a');
+  //cout<<screenMap['a']<<endl;
   cout<<screenMap['b']<<endl;
   cout<<screenMap['c']<<endl;
   cout<<screenMap['d']<<endl;
@@ -198,9 +227,17 @@ void printMap()
   cout<<screenMap['j']<<endl;
   cout<<screenMap['k']<<endl;
   cout<<screenMap['l']<<endl;
-
+  cout<<screenMap.size()<<endl;
 
 }
+
+
+void giveScore(Player &player, int scorei)
+{
+  player.score= player.score+ scorei;
+
+}
+
 
 int  main(int argc, char* argv[])
 {
@@ -209,21 +246,37 @@ int  main(int argc, char* argv[])
 
   //int ch;  
 
+  Player p1("Chuck");
+  playerVector.push_back(p1);
+
+  Player p2("Will");
+  playerVector.push_back(p2);
+
+  Player p3("Stephen");
+  playerVector.push_back(p3);
+
+  Player p4("Taylor");
+  playerVector.push_back(p4);
+
+  Player p5("Rick");
+  playerVector.push_back(p5);
+
+  Player p6("Steve");
+  playerVector.push_back(p6);
+
+
+
   Deck deck(cardArray);
+  
   //deck.shuffle();
  
-
- /*
-  initscr();
-  start_color();
-  */
-
 
   init_pair(1, COLOR_RED, COLOR_WHITE);
   init_pair(2, COLOR_BLUE, COLOR_WHITE);
   init_pair(3, COLOR_BLACK, COLOR_WHITE);
   init_pair(4, COLOR_GREEN, COLOR_BLACK);
-  
+  init_pair(5, COLOR_WHITE, COLOR_BLACK);  
+  init_pair(6, COLOR_BLACK, COLOR_BLACK);
 
   gameScreen screen;
   //attrset(COLOR_PAIR(1));
@@ -235,50 +288,12 @@ int  main(int argc, char* argv[])
   refresh();
   sleep(1);
 
-  
-  screen.replaceCard('a',deck.nextCard());
-  screen.replaceCard('b',deck.nextCard());
-  screen.replaceCard('c',deck.nextCard());
-  screen.replaceCard('d',deck.nextCard());
-  screen.replaceCard('e',deck.nextCard());
-  screen.replaceCard('f',deck.nextCard());
-  screen.replaceCard('g',deck.nextCard());
-  screen.replaceCard('h',deck.nextCard());
-  screen.replaceCard('i',deck.nextCard());
-  screen.replaceCard('j',deck.nextCard());
-  screen.replaceCard('k',deck.nextCard());
-  screen.replaceCard('l',deck.nextCard());
-  
-
-  //screen.deal(deck);
+  screen.deal(deck);
 
   screen.updateDeckSize(deck);
   
   refresh();
-  sleep(1);
-
-  //screen.highlightCard('b');
-  //refresh();
-  //sleep(2);
-  //screen.unhighlightCard('b');
-  //refresh();
-  //sleep(2);
-  /*
-  highlightCard('a');
-  highlightCard('b');
-  highlightCard('c');
-  highlightCard('d');
-  highlightCard('e');
-  highlightCard('f');
-  highlightCard('g');
-  highlightCard('h');
-  highlightCard('i');
-  highlightCard('j');
-  highlightCard('k');
-  highlightCard('l');
-  refresh();
-  */
-
+  //sleep(1);
 
   int c;
 
@@ -346,37 +361,60 @@ int  main(int argc, char* argv[])
 	  screen.onOffHighlight('l');
 	  break;
 
+	  
 	case 'p':
 	  endwin();
 	  printMap();
+	  //cout<<p1.score<<endl;
 	  break;
+	  
+
+	case '6':
+	  //quit out of game
+	  attrset(COLOR_PAIR(5));
+	  //int q;
+	  //q= getch();
+	  move(29,4);
+	  addstr("Do you want to quit? (y/n)");
+	  refresh();
+	  int q;
+          q= getch();
+
+	  //for (;;)
+	    {
+	      switch(q)
+		{
+		case 'y':
+		  endwin();
+		  exit(0);
+		  break;
+
+		case 'n':
+		  move(29,4);
+		  addstr("                          ");
+		  break;
+		}
+	    }
+	  break;	  
 
 	case 'x':
 	  if(noSet())
 	    {
 	      deck.clearAndReshuffle();
 	      //deck.shuffle();
-	      //screen.deal(deck);
-	      screen.replaceCard('a',deck.nextCard());
-	      screen.replaceCard('b',deck.nextCard());
-	      screen.replaceCard('c',deck.nextCard());
-	      screen.replaceCard('d',deck.nextCard());
-	      screen.replaceCard('e',deck.nextCard());
-	      screen.replaceCard('f',deck.nextCard());
-	      screen.replaceCard('g',deck.nextCard());
-	      screen.replaceCard('h',deck.nextCard());
-	      screen.replaceCard('i',deck.nextCard());
-	      screen.replaceCard('j',deck.nextCard());
-	      screen.replaceCard('k',deck.nextCard());
-	      screen.replaceCard('l',deck.nextCard());
+	      screen.deal(deck);
 	      screen.updateDeckSize(deck);
 	      //give points
+	      giveScore(playerVector[0],10);
+	      screen.updatePlayerScores();
 	      break;
 	    }
 
 	  else if (!noSet())
 	    {
 	      //penalize
+	      giveScore(playerVector[0],-5);
+	      screen.updatePlayerScores();
 	      break;
 	    }
 
@@ -396,6 +434,9 @@ int  main(int argc, char* argv[])
 		    }
 		  screen.highlightVector.clear();
 		  screen.updateDeckSize(deck);
+		  //reward
+		  giveScore(playerVector[0],5);
+		  screen.updatePlayerScores();
 		}
 
 	      else
@@ -404,9 +445,12 @@ int  main(int argc, char* argv[])
 		  for (int k=0; k<3; k++)
 		    {
 		      screen.unhighlightCard(screen.highlightVector[k]);
-
+		      
 		    }
 		  screen.highlightVector.clear();
+		  //penalize
+		  giveScore(playerVector[0],-3);
+		  screen.updatePlayerScores();
 		}
 	    }
 	  break;

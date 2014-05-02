@@ -1,6 +1,7 @@
 //Lavender Team
 //Charles Eswine
 
+
 #ifndef CARD
 #define CARD
 //#include "global.h"
@@ -8,7 +9,7 @@ using namespace std;
 
 //extern Card cardArray[80];
 
-//int idn=1;
+int idn=1;
 
 class Card
 {
@@ -17,7 +18,7 @@ class Card
   int properties[4];
   //string l1,l2,l3,l4,l5;
   string lines[5];
-  Card(string linesi[], int shapei, int colori, int numberi, int symboli);
+  Card(int idi, string linesi[], int shapei, int colori, int numberi, int symboli);
   Card();
   string getLine(Card card, int line);
   //int  getProperties(Card card);
@@ -48,11 +49,11 @@ string Card::getLine(Card card, int line)
 
 Card::Card()
 {
-  lines[0]="               ";
-  lines[1]="               ";
-  lines[2]="               ";
-  lines[3]="               ";
-  lines[4]="               ";
+  lines[0]="xxxxxxxxxxxxxxx";
+  lines[1]="xxxxxxxxxxxxxxx";
+  lines[2]="xxxxxxxxxxxxxxx";
+  lines[3]="xxxxxxxxxxxxxxx";
+  lines[4]="xxxxxxxxxxxxxxx";
 
   //l1="               ";
   //l2="               ";
@@ -60,17 +61,18 @@ Card::Card()
   //l4="               ";
   //l5="               ";
 
+  id=99;
   shape=0;
   properties[0]=0;
-  color=0;
-  properties[1]=0;
+  color=6;
+  properties[1]=6;
   number=0;
   properties[2]=0;
   symbol=0;
   properties[3]=0;
 }
 
-Card::Card(string linesi[], int shapei, int colori, int numberi, int symboli)
+Card::Card(int idi, string linesi[], int shapei, int colori, int numberi, int symboli)
 {
 
   for (int i=0; i<5; i++)
@@ -78,8 +80,8 @@ Card::Card(string linesi[], int shapei, int colori, int numberi, int symboli)
       lines[i]=linesi[i];
     }
 
-  id=idn;
-  idn=idn+1;
+  id=idi;
+  //idn=idn+1;
   shape=shapei;
   properties[0]=shape;
   color=colori;
@@ -321,105 +323,106 @@ string highlightl7="xxxxxxxxxxxxxxxxx";
 
 string highlight [7]= {highlightl1, highlightl2, highlightl3, highlightl4, highlightl5, highlightl6, highlightl7};
 */
-  Card c1(cardPlusBlock1, 0, 1, 1, 0);
-  Card c2(cardPlusBlock2, 0, 1, 2, 0);
-  Card c3(cardPlusBlock3, 0, 1, 3, 0);
-  Card c4(cardPluso1, 0, 1, 1, 1);
-  Card c5(cardPluso2, 0, 1, 2, 1);
-  Card c6(cardPluso3, 0, 1, 3, 1);
-  Card c7(cardPlusAmp1, 0, 1, 1, 2);
-  Card c8(cardPlusAmp2, 0, 1, 2, 2);
-  Card c9(cardPlusAmp3, 0, 1, 3, 2);
+Card c1(1,cardPlusBlock1, 0, 1, 1, 0);
+Card c2(2,cardPlusBlock2, 0, 1, 2, 0);
+Card c3(3,cardPlusBlock3, 0, 1, 3, 0);
+Card c4(4,cardPluso1, 0, 1, 1, 1);
+Card c5(5,cardPluso2, 0, 1, 2, 1);
+Card c6(6,cardPluso3, 0, 1, 3, 1);
+Card c7(7,cardPlusAmp1, 0, 1, 1, 2);
+Card c8(8,cardPlusAmp2, 0, 1, 2, 2);
+Card c9(9,cardPlusAmp3, 0, 1, 3, 2);
 
-  Card c10(cardPlusBlock1, 0, 2, 1, 0);
-  Card c11(cardPlusBlock2, 0, 2, 2, 0);
-  Card c12(cardPlusBlock3, 0, 2, 3, 0);
-  Card c13(cardPluso1, 0, 2, 1, 1);
-  Card c14(cardPluso2, 0, 2, 2, 1);
-  Card c15(cardPluso3, 0, 2, 3, 1);
-  Card c16(cardPlusAmp1, 0, 2, 1, 2);
-  Card c17(cardPlusAmp2, 0, 2, 2, 2);
-  Card c18(cardPlusAmp3, 0, 2, 3, 2);
+Card c10(10,cardPlusBlock1, 0, 2, 1, 0);
+Card c11(11,cardPlusBlock2, 0, 2, 2, 0);
+Card c12(12,cardPlusBlock3, 0, 2, 3, 0);
+Card c13(13,cardPluso1, 0, 2, 1, 1);
+Card c14(14,cardPluso2, 0, 2, 2, 1);
+Card c15(15,cardPluso3, 0, 2, 3, 1);
+Card c16(16,cardPlusAmp1, 0, 2, 1, 2);
+Card c17(17,cardPlusAmp2, 0, 2, 2, 2);
+Card c18(18,cardPlusAmp3, 0, 2, 3, 2);
 
-  Card c19(cardPlusBlock1, 0, 3, 1, 0);
-  Card c20(cardPlusBlock2, 0, 3, 2, 0);
-  Card c21(cardPlusBlock3, 0, 3, 3, 0);
-  Card c22(cardPluso1, 0, 3, 1, 1);
-  Card c23(cardPluso2, 0, 3, 2, 1);
-  Card c24(cardPluso3, 0, 3, 3, 1);
-  Card c25(cardPlusAmp1, 0, 3, 1, 2);
-  Card c26(cardPlusAmp2, 0, 3, 2, 2);
-  Card c27(cardPlusAmp3, 0, 3, 3, 2);
-
-
-
-
-  Card c28(cardSquareBlock1, 1, 1, 1, 0);
-  Card c29(cardSquareBlock2, 1, 1, 2, 0);
-  Card c30(cardSquareBlock3, 1, 1, 3, 0);
-  Card c31(cardSquareo1, 1, 1, 1, 1);
-  Card c32(cardSquareo2, 1, 1, 2, 1);
-  Card c33(cardSquareo3, 1, 1, 3, 1);
-  Card c34(cardSquareAmp1, 1, 1, 1, 2);
-  Card c35(cardSquareAmp2, 1, 1, 2, 2);
-  Card c36(cardSquareAmp3, 1, 1, 3, 2);
-
-  Card c37(cardSquareBlock1, 1, 2, 1, 0);
-  Card c38(cardSquareBlock2, 1, 2, 2, 0);
-  Card c39(cardSquareBlock3, 1, 2, 3, 0);
-  Card c40(cardSquareo1, 1, 2, 1, 1);
-  Card c41(cardSquareo2, 1, 2, 2, 1);
-  Card c42(cardSquareo3, 1, 2, 3, 1);
-  Card c43(cardSquareAmp1, 1, 2, 1, 2);
-  Card c44(cardSquareAmp2, 1, 2, 2, 2);
-  Card c45(cardSquareAmp3, 1, 2, 3, 2);
-
-  Card c46(cardSquareBlock1, 1, 3, 1, 0);
-  Card c47(cardSquareBlock2, 1, 3, 2, 0);
-  Card c48(cardSquareBlock3, 1, 3, 3, 0);
-  Card c49(cardSquareo1, 1, 3, 1, 1);
-  Card c50(cardSquareo2, 1, 3, 2, 1);
-  Card c51(cardSquareo3, 1, 3, 3, 1);
-  Card c52(cardSquareAmp1, 1, 3, 1, 2);
-  Card c53(cardSquareAmp2, 1, 3, 2, 2);
-  Card c54(cardSquareAmp3, 1, 3, 3, 2);
+Card c19(19,cardPlusBlock1, 0, 3, 1, 0);
+Card c20(20,cardPlusBlock2, 0, 3, 2, 0);
+Card c21(21,cardPlusBlock3, 0, 3, 3, 0);
+Card c22(22,cardPluso1, 0, 3, 1, 1);
+Card c23(23,cardPluso2, 0, 3, 2, 1);
+Card c24(24,cardPluso3, 0, 3, 3, 1);
+Card c25(25,cardPlusAmp1, 0, 3, 1, 2);
+Card c26(26,cardPlusAmp2, 0, 3, 2, 2);
+Card c27(27,cardPlusAmp3, 0, 3, 3, 2);
 
 
 
 
-  Card c55(cardSlashBlock1, 2, 1, 1, 0);
-  Card c56(cardSlashBlock2, 2, 1, 2, 0);
-  Card c57(cardSlashBlock3, 2, 1, 3, 0);
-  Card c58(cardSlasho1, 2, 1, 1, 1);
-  Card c59(cardSlasho2, 2, 1, 2, 1);
-  Card c60(cardSlasho3, 2, 1, 3, 1);
-  Card c61(cardSlashAmp1, 2, 1, 1, 2);
-  Card c62(cardSlashAmp2, 2, 1, 2, 2);
-  Card c63(cardSlashAmp3, 2, 1, 3, 2);
+Card c28(28,cardSquareBlock1, 1, 1, 1, 0);
+Card c29(29,cardSquareBlock2, 1, 1, 2, 0);
+Card c30(30,cardSquareBlock3, 1, 1, 3, 0);
+Card c31(31,cardSquareo1, 1, 1, 1, 1);
+Card c32(32,cardSquareo2, 1, 1, 2, 1);
+Card c33(33,cardSquareo3, 1, 1, 3, 1);
+Card c34(34,cardSquareAmp1, 1, 1, 1, 2);
+Card c35(35,cardSquareAmp2, 1, 1, 2, 2);
+Card c36(36,cardSquareAmp3, 1, 1, 3, 2);
 
-  Card c64(cardSlashBlock1, 2, 2, 1, 0);
-  Card c65(cardSlashBlock2, 2, 2, 2, 0);
-  Card c66(cardSlashBlock3, 2, 2, 3, 0);
-  Card c67(cardSlasho1, 2, 2, 1, 1);
-  Card c68(cardSlasho2, 2, 2, 2, 1);
-  Card c69(cardSlasho3, 2, 2, 3, 1);
-  Card c70(cardSlashAmp1, 2, 2, 1, 2);
-  Card c71(cardSlashAmp2, 2, 2, 2, 2);
-  Card c72(cardSlashAmp3, 2, 2, 3, 2);
+Card c37(37,cardSquareBlock1, 1, 2, 1, 0);
+Card c38(38,cardSquareBlock2, 1, 2, 2, 0);
+Card c39(39,cardSquareBlock3, 1, 2, 3, 0);
+Card c40(40,cardSquareo1, 1, 2, 1, 1);
+Card c41(41,cardSquareo2, 1, 2, 2, 1);
+Card c42(42,cardSquareo3, 1, 2, 3, 1);
+Card c43(43,cardSquareAmp1, 1, 2, 1, 2);
+Card c44(44,cardSquareAmp2, 1, 2, 2, 2);
+Card c45(45,cardSquareAmp3, 1, 2, 3, 2);
 
-  Card c73(cardSlashBlock1, 2, 3, 1, 0);
-  Card c74(cardSlashBlock2, 2, 3, 2, 0);
-  Card c75(cardSlashBlock3, 2, 3, 3, 0);
-  Card c76(cardSlasho1, 2, 3, 1, 1);
-  Card c77(cardSlasho2, 2, 3, 2, 1);
-  Card c78(cardSlasho3, 2, 3, 3, 1);
-  Card c79(cardSlashAmp1, 2, 3, 1, 2);
-  Card c80(cardSlashAmp2, 2, 3, 2, 2);
-  Card c81(cardSlashAmp3, 2, 3, 3, 2);
+Card c46(46,cardSquareBlock1, 1, 3, 1, 0);
+Card c47(47,cardSquareBlock2, 1, 3, 2, 0);
+Card c48(48,cardSquareBlock3, 1, 3, 3, 0);
+Card c49(49,cardSquareo1, 1, 3, 1, 1);
+Card c50(50,cardSquareo2, 1, 3, 2, 1);
+Card c51(51,cardSquareo3, 1, 3, 3, 1);
+Card c52(52,cardSquareAmp1, 1, 3, 1, 2);
+Card c53(53,cardSquareAmp2, 1, 3, 2, 2);
+Card c54(54,cardSquareAmp3, 1, 3, 3, 2);
 
-Card cardArray []= {c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47,c48,c49,c50,c51,c52,c53,c54,c55,c56,c57,c58,c59,c60,c61,c62,c63,c64,c65,c66,c67,c68,c69,c70,c71,c72,c73,c74,c75,c76,c77,c78,c79,c80,c81};
 
-  //cardVector= {c1,c2,c3,c4,c5,c6,c7,c8,c9,c10};
-  //return cardVector;
+
+
+Card c55(55,cardSlashBlock1, 2, 1, 1, 0);
+Card c56(56,cardSlashBlock2, 2, 1, 2, 0);
+Card c57(57,cardSlashBlock3, 2, 1, 3, 0);
+Card c58(58,cardSlasho1, 2, 1, 1, 1);
+Card c59(59,cardSlasho2, 2, 1, 2, 1);
+Card c60(60,cardSlasho3, 2, 1, 3, 1);
+Card c61(61,cardSlashAmp1, 2, 1, 1, 2);
+Card c62(62,cardSlashAmp2, 2, 1, 2, 2);
+Card c63(63,cardSlashAmp3, 2, 1, 3, 2);
+
+Card c64(64,cardSlashBlock1, 2, 2, 1, 0);
+Card c65(65,cardSlashBlock2, 2, 2, 2, 0);
+Card c66(66,cardSlashBlock3, 2, 2, 3, 0);
+Card c67(67,cardSlasho1, 2, 2, 1, 1);
+Card c68(68,cardSlasho2, 2, 2, 2, 1);
+Card c69(69,cardSlasho3, 2, 2, 3, 1);
+Card c70(70,cardSlashAmp1, 2, 2, 1, 2);
+Card c71(71,cardSlashAmp2, 2, 2, 2, 2);
+Card c72(72,cardSlashAmp3, 2, 2, 3, 2);
+
+Card c73(73,cardSlashBlock1, 2, 3, 1, 0);
+Card c74(74,cardSlashBlock2, 2, 3, 2, 0);
+Card c75(75,cardSlashBlock3, 2, 3, 3, 0);
+Card c76(76,cardSlasho1, 2, 3, 1, 1);
+Card c77(77,cardSlasho2, 2, 3, 2, 1);
+Card c78(78,cardSlasho3, 2, 3, 3, 1);
+Card c79(79,cardSlashAmp1, 2, 3, 1, 2);
+Card c80(80,cardSlashAmp2, 2, 3, 2, 2);
+Card c81(81,cardSlashAmp3, 2, 3, 3, 2);
+
+//Card cardArray []= {c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47,c48,c49,c50,c51,c52,c53,c54,c55,c56,c57,c58,c59,c60,c61,c62,c63,c64,c65,c66,c67,c68,c69,c70,c71,c72,c73,c74,c75,c76,c77,c78,c79,c80,c81};
+
+//vector<Card> cardArray= {c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,c14,c15,c16,c17,c18,c19,c20,c21,c22,c23,c24,c25,c26,c27,c28,c29,c30,c31,c32,c33,c34,c35,c36,c37,c38,c39,c40,c41,c42,c43,c44,c45,c46,c47,c48,c49,c50,c51,c52,c53,c54,c55,c56,c57,c58,c59,c60,c61,c62,c63,c64,c65,c66,c67,c68,c69,c70,c71,c72,c73,c74,c75,c76,c77,c78,c79,c80,c81};
+
+vector<Card> cardArray = {c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12};
 
 #endif
