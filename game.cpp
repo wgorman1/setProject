@@ -268,7 +268,7 @@ int  main(int argc, char* argv[])
 
   Deck deck(cardArray);
   
-  //deck.shuffle();
+  deck.shuffle();
  
 
   init_pair(1, COLOR_RED, COLOR_WHITE);
