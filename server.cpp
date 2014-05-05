@@ -19,17 +19,22 @@
 #include <sys/types.h>
 #include <iostream>
 #include <fstream>
+#include <sstream> 
 #include <strings.h>
 #include <string>
 #include <pthread.h>
 #include <iomanip>
 #include <semaphore.h>
-
+#include <unistd.h>
+#include <netdb.h> 
+#include <time.h>
+#include <vector>
 
 #define SERVER_PORT  8000
 
 #define TRUE             1
 #define FALSE            0
+
 int    len, rc, on = 1;
 int    listen_sd = -1, new_sd = -1;
 int    desc_ready, end_server = FALSE, compress_array = FALSE;
@@ -223,7 +228,8 @@ main (int argc, char *argv[])
 	    printf("  New incoming connection - %d\n", new_sd);
 	    fds[nfds].fd = new_sd;
 	    fds[nfds].events = POLLIN;
-	    printf("nfds = %d", nfds);
+	 
+	    //	    printf("nfds = %d", nfds);
 	    nfds++;
 
 	    /*****************************************************/
@@ -310,7 +316,7 @@ main (int argc, char *argv[])
 
 void *task1(void *p)
 {
-  char test[300];
+ 
   char   buffer[80];
 
   //  read(fds[i].fd, test, 300);
@@ -327,6 +333,7 @@ void *task1(void *p)
    std:: string header = (buffer + '\0');
  
    write(1, header.c_str(), header.size());
+  
    printf("\n");
   if (rc < 0)
     {
@@ -335,12 +342,18 @@ void *task1(void *p)
 	  //perror("  recv() failed");
 	  close_conn = TRUE;
 	}
-    }   
-
-  len = rc;
-  //  printf("  %d bytes received\n", len);
- 
-
+    }
+     
+  /*  rc = send(fds[i].fd, buffer, sizeof(buffer), 0);
+  if(rc < 0)
+  m
+\[  {
+      perror(" send() failed");
+      close_conn = TRUE;
+      
+    }
+  */
+  send(fds[i].fd, header.c_str(), header.size(), 0);
 
   if (close_conn)
     {
