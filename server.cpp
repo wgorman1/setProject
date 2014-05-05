@@ -30,6 +30,14 @@
 #include <time.h>
 #include <vector>
 
+#include "Card.h"
+#include "Player.h"
+#include "Card.h"
+#include "global.h"
+#include "Deck.h"
+#include "gameScreen.h"
+
+
 #define SERVER_PORT  8000
 
 #define TRUE             1
@@ -43,9 +51,16 @@ struct sockaddr_in6   addr;
 struct pollfd fds[14];
 int    nfds = 1, current_size = 0, i, j;
 pthread_t threadA[12];
-void *task1(void *);
+//void *task1(void *);
+
 int polling;
 ssize_t readFromClient = 1;
+
+vector<Player> playerVector;
+map<char, Card> screenMap;
+
+string nameArray[30];
+
 
 main (int argc, char *argv[])
 {
@@ -226,12 +241,67 @@ main (int argc, char *argv[])
 	    /* pollfd structure                                  */
 	    /*****************************************************/
 	    printf("  New incoming connection - %d\n", new_sd);
+	   
+	    //	    if(current_size < 13)
+	    // {
 	    fds[nfds].fd = new_sd;
 	    fds[nfds].events = POLLIN;
-
+	    printf("inside if statement");
 	    //    printf("nfds = %d", nfds);
 	    nfds++;
 
+	    char   buffer2[80];
+	   
+	    std:: string appendedName;
+	    recv(fds[i].fd, buffer2, sizeof(buffer2), 0);
+	    std:: string appendage = "1";
+	    
+	    std:: string name = (buffer2 + '\0');
+	    //	    write(1, name.c_str(), name.size());
+	    int result = 1;
+	    int counter = 1;
+
+	    while(result == 1)
+	      {
+		result = 0;
+		for(int j=0; j<12;j++)
+		  {
+		    if(name == nameArray[j])
+		      {
+			name = name + to_string(counter);
+			counter = counter + 1;
+			result = 1;
+			printf("name appended");
+		      }
+		  }
+
+		
+	      }
+	    
+	    nameArray[current_size] = name;
+	    for(int j=0; j < 10; j++)
+	      {
+		std::cout << nameArray[j] << "\n";
+	      }
+	    Player p1(name);
+            playerVector.push_back(p1);
+	    // std::cout << "myvector contains:";
+
+	    /*	    for (std::vector<int>::iterator it = playerVector.begin() ; it != playerVector.end(); ++it)
+	      std::cout << ' ' << *it;
+	    std::cout << '\n';
+	    */
+	    string message = "You have joined as ";
+	    string end2 = "\n";
+	    string message2 = message + name + end2;
+	    std::cout << message2.c_str() << "\n";
+	    // write(1, message2.c_str(), message2.size());
+	    // send(fds[i].fd, message2.c_str(), message2.size(), 0);
+	    // }
+
+	    //    else{
+	    //  nfds++;
+	    // }
 	    /*****************************************************/
 	    /* Loop back up and accept another incoming          */
 	    /* connection                                        */
@@ -261,6 +331,9 @@ main (int argc, char *argv[])
 	      /* failure occurs, we will close the                 */
 	      /* connection.                                       */
 	      /*****************************************************/
+
+	      void *task1(void *);
+
 	      pthread_create(&threadA[nfds], NULL, task1, NULL);
 
 	      //  } while(TRUE);
@@ -318,7 +391,7 @@ void *task1(void *p)
 {
  
   char   buffer[80];
-  ssize_t bytesSent;
+
  
   rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
  
@@ -335,13 +408,14 @@ void *task1(void *p)
     }
 
  
-
+ 
   for(int j = 1; j < current_size; j++)
    {   
-    bytesSent = send(fds[j].fd, header.c_str(),header.size(), 0);      
+   
+     send(fds[j].fd, header.c_str(),header.size(), 0);      
        }
 
-  printf("bytes sent: %s \n", header.c_str());
+  printf("sent to clients: %s \n", header.c_str());
  
   if (close_conn)
     {
@@ -351,9 +425,5 @@ void *task1(void *p)
     }
 
 }
-/*
-void *task2(void *p)
-{
-  
-}
-*/
+
+

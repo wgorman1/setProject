@@ -21,15 +21,27 @@
 #include <poll.h>
 #include <curses.h>
 
-#include "gameScreen.h"
+#include <algorithm>
+#include <vector>
+#include <map>
+#include <list>
+#include <iostream>
+/*
+#include "Card.h"
+#include "Player.h"
+#include "Card.h"
 #include "global.h"
-
+#include "Deck.h"
+#include "gameScreen.h"
+*/
 using namespace std;
-
 
 
 int main (int argc, char* argv[])
 {
+
+  
+
   int listenFd, portNo;
   struct pollfd myPoll[2];
   struct sockaddr_in svrAdd;
@@ -78,10 +90,12 @@ int main (int argc, char* argv[])
   //send stuff to server
  
   string name = argv[2];
-  string message = " has joined the game.\n";
-  string message2 = name + message;
-  send(listenFd, message2.c_str(), message2.length(), 0); 
- 
+  //  string message = " has joined the game.\n";
+  // string message2 = name + message;
+  send(listenFd, name.c_str(), name.length(), 0); 
+  
+  
+
   myPoll[0].fd = listenFd;
   myPoll[0].events = POLLIN;
 
@@ -111,9 +125,12 @@ int main (int argc, char* argv[])
       if(myPoll[0].revents & POLLIN)
 	{
 	  
-	  int bytesReceived = recv(listenFd, v, sizeof(v),0);
+	  ssize_t br = recv(listenFd, v, sizeof(v),0);
+	  if(br > 0)
+	    {
 	  std:: string message = (v + '\0');
 	  printf("Message received: %s\n", message.c_str());
+	    }
 	}
    }
   
