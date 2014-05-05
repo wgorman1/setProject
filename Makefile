@@ -1,7 +1,7 @@
 CXX=c++11
 LDLIBS=-lcurses
 
-all: game alt test
+all: game test server client
 
 game:game.cpp Card.h Deck.h gameScreen.h global.h Player.h
 	$(CXX) -o game -Wall game.cpp $(LDLIBS)
@@ -9,5 +9,8 @@ game:game.cpp Card.h Deck.h gameScreen.h global.h Player.h
 alt:alt.cpp
 	c++11 -o alt -Wall alt.cpp -lcurses
 
-test:test.cpp
-	c++11 -o test -Wall test.cpp -lcurses
+client:client.cpp
+	c++11 -o client -Wall client.cpp
+
+server:server.cpp
+	c++11 -o server -Wall server.cpp -lpthread -lcurses
