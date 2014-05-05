@@ -9,6 +9,7 @@
 #include <curses.h>
 #include <time.h>
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <cstring>
 #include <cerrno>
@@ -32,7 +33,7 @@ using namespace std;
 #include <stdio.h>
 #include <sys/time.h>
 #include <signal.h>
-#include <time.h>
+#include <pthread.h>
 #include <errno.h>
 #include <cctype>
 #include <map>
@@ -60,6 +61,118 @@ int millisleep(unsigned msecs) {
 void animate()
 {
 
+
+  /*
+  clock_t t, k;
+
+  //t=clock();
+
+  //k=clock();
+  time(&t);
+  time(&k);
+
+  cout<<CLOCKS_PER_SEC<<endl;
+  cout<<difftime(t,k)<<endl;
+  cout<<( ( (float)difftime(t,k))/CLOCKS_PER_SEC)<<endl;
+
+  for(;;)
+    {
+      //t=clock();
+      time(&t);
+      cout<<( ( (float)difftime(t,k))/CLOCKS_PER_SEC)<<endl;
+
+      if ((((float)difftime(t,k))/CLOCKS_PER_SEC)==0.05)
+	{
+	  cout<<"x"<<endl;
+
+	}
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.10)
+        {
+	  cout<<"xx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.15)
+        {
+	  cout<<"xxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.20)
+        {
+	  cout<<"xxxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.25)
+        {
+	  cout<<"xxxxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.30)
+        {
+	  cout<<"xxxxxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.35)
+        {
+	  cout<<"xxxxxxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.40)
+        {
+	  cout<<"xxxxxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.45)
+        {
+	  cout<<"xxxxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.50)
+        {
+	  cout<<"xxxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.55)
+        {
+	  cout<<"xxx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.60)
+        {
+	  cout<<"xx"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.65)
+        {
+	  cout<<"x"<<endl;
+
+        }
+
+      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.70)
+        {
+	  cout<<"x"<<endl;
+
+        }
+
+
+
+    }
+
+  */
+
+
+  /*
   struct itimerval value;
 
   int which= ITIMER_REAL;
@@ -74,6 +187,11 @@ void animate()
   int time2= setitimer(which, &value, NULL);
 
   cout<<"2 is "<<time2<<endl;  
+  */
+
+  //pthread_t thread1;
+
+  //pthread_create(&thread1, NULL, Producer1,);
 
 
   string frame1l1="xxxxxxxxxxxxxx";
@@ -126,6 +244,76 @@ void animate()
 
 }
 
+void finishGame()
+{
+  endwin();
+  sort(playerVector.begin(), playerVector.end());
+
+  int rank=1;
+
+  for (unsigned int i=playerVector.size()-1; i>0; i--)
+    {
+      if (i==playerVector.size()-1 || playerVector[i].score == playerVector[i+1].score)
+	{
+	  cout<<rank<<". "<<playerVector[i].name;
+
+	  for (int k=playerVector[i].name.length(); k<14 ; k++)
+	    {
+
+	      cout<<" ";
+	    }
+
+	  cout<<playerVector[i].score<<endl;
+	}
+
+      else 
+	{
+	  rank+=1;
+	  cout<<rank<<". "<<playerVector[i].name;
+
+	  for (int k=playerVector[i].name.length(); k<14 ; k++)
+            {
+
+              cout<<" ";
+            }
+
+          cout<<playerVector[i].score<<endl;
+
+	}
+
+    }
+  exit(0);
+}
+
+
+void endGameCheck()
+{
+  int count=0;
+
+  map<char, Card>::iterator it;
+
+  for (it=screenMap.begin(); it!=screenMap.end(); ++it)
+    {
+      if (it->second.id!=99)
+	{
+	  count+=1;
+
+	}
+
+    }
+
+  if (count==0)
+    {
+      //END GAME STUFF
+      finishGame();
+      //endwin();
+      //cout<<"DONE"<<endl;
+      //exit(0);
+
+
+    }
+}
+
 
 bool isMatch(vector<char> selectedCards, gameScreen screen)
 {
@@ -133,12 +321,6 @@ bool isMatch(vector<char> selectedCards, gameScreen screen)
   
   for (int i=0; i<4; i++)
     {
-      /*
-      if ((screen.screenMap[selectedCards[0]].properties[i]==screen.screenMap[selectedCards[1]].properties[i] && screen.screenMap[selectedCards[1]].properties[i]==screen.screenMap[selectedCards[2]].properties[i]) || (screen.screenMap[selectedCards[0]].properties[i]!=screen.screenMap[selectedCards[1]].properties[i] && screen.screenMap[selectedCards[0]].properties[i]!=screen.screenMap[selectedCards[2]].properties[i] && screen.screenMap[selectedCards[1]].properties[i]!=screen.screenMap[selectedCards[2]].properties[i]))
-	{
-	  matches+=1;
-	}
-      */
             
       if ((screenMap[selectedCards[0]].properties[i]==screenMap[selectedCards[1]].properties[i] && screenMap[selectedCards[1]].properties[i]==screenMap[selectedCards[2]].properties[i]) || (screenMap[selectedCards[0]].properties[i]!=screenMap[selectedCards[1]].properties[i] && screenMap[selectedCards[0]].properties[i]!=screenMap[selectedCards[2]].properties[i] && screenMap[selectedCards[1]].properties[i]!=screenMap[selectedCards[2]].properties[i]))
         {
@@ -187,7 +369,7 @@ bool noSet()
 	      for (int i=0; i<4; i++)
 		{
 		  
-		  if ((test[x].properties[i]==test[y].properties[i] && test[y].properties[i]==test[z].properties[i]) || (test[x].properties[i]!=test[y].properties[i] && test[x].properties[i]!=test[z].properties[i] && test[y].properties[i]!=test[z].properties[i]))
+		  if ((test[x].properties[i]==test[y].properties[i] && test[y].properties[i]==test[z].properties[i] && test[x].id!= 99) || (test[x].properties[i]!=test[y].properties[i] && test[x].properties[i]!=test[z].properties[i] && test[y].properties[i]!=test[z].properties[i] && test[x].id!= 99))
 		  
 		    {
 		      matches+=1;
@@ -211,11 +393,12 @@ bool noSet()
   return true;
 }
 
-void printMap()
+void printMap( Deck deck)
 {
   //screenMap['b']=deck.nextCard();
-  screenMap.erase('a');
+  //screenMap.erase('a');
   //cout<<screenMap['a']<<endl;
+  /*
   cout<<screenMap['b']<<endl;
   cout<<screenMap['c']<<endl;
   cout<<screenMap['d']<<endl;
@@ -228,13 +411,41 @@ void printMap()
   cout<<screenMap['k']<<endl;
   cout<<screenMap['l']<<endl;
   cout<<screenMap.size()<<endl;
+  */
 
+  //cout<<sizeof(deck);
 }
 
 
 void giveScore(Player &player, int scorei)
 {
-  player.score= player.score+ scorei;
+  //player.score= player.score+ scorei;
+
+  if (scorei<0)
+    {
+      player.streak=0;
+      player.score+= scorei;
+    }
+
+  else if (scorei>0 && player.streak>0)
+    {
+      //player.streak+=1;
+      player.score+= scorei + (2 * player.streak);
+      player.streak+=1;
+    }
+
+  else if (scorei>0 && player.streak==0)
+    {
+      //reset all other players streaks
+      
+      for (unsigned int i=0; i< playerVector.size(); i++)
+        {
+          playerVector[i].streak=0;
+        }
+      player.score+= scorei;
+      player.streak=1;
+    }
+
 
 }
 
@@ -268,7 +479,7 @@ int  main(int argc, char* argv[])
 
   Deck deck(cardArray);
   
-  deck.shuffle();
+  //deck.shuffle();
  
 
   init_pair(1, COLOR_RED, COLOR_WHITE);
@@ -361,10 +572,11 @@ int  main(int argc, char* argv[])
 	  screen.onOffHighlight('l');
 	  break;
 
-	  
+	  	  
 	case 'p':
 	  endwin();
-	  printMap();
+	  //animate();
+	  printMap(deck);
 	  //cout<<p1.score<<endl;
 	  break;
 	  
@@ -378,10 +590,30 @@ int  main(int argc, char* argv[])
 	  addstr("Do you want to quit? (y/n)");
 	  refresh();
 	  int q;
-          q= getch();
+          //q= getch();
 
-	  //for (;;)
+	  do
 	    {
+	      q=getch();
+
+	      if (q=='y')
+		{
+		  endwin();
+                  exit(0);
+                  break;
+
+		}
+
+	      else if (q=='n')
+		{
+		  move(29,4);
+                  addstr("                          ");
+                  break;
+
+		}
+
+
+	      /*
 	      switch(q)
 		{
 		case 'y':
@@ -393,21 +625,32 @@ int  main(int argc, char* argv[])
 		  move(29,4);
 		  addstr("                          ");
 		  break;
+
 		}
+	      */
 	    }
-	  break;	  
+	    while (q!='y' || q!='n');
+	    break;	  
 
 	case 'x':
 	  if(noSet())
 	    {
-	      deck.clearAndReshuffle();
-	      //deck.shuffle();
-	      screen.deal(deck);
-	      screen.updateDeckSize(deck);
-	      //give points
-	      giveScore(playerVector[0],10);
-	      screen.updatePlayerScores();
-	      break;
+	      if (deck.deckSize()<=12)
+		{
+		  giveScore(playerVector[0],10);
+		  finishGame();
+		}
+	      else
+		{
+		  deck.clearAndReshuffle();
+		  //deck.shuffle();
+		  screen.deal(deck);
+		  screen.updateDeckSize(deck);
+		  //give points
+		  giveScore(playerVector[0],10);
+		  screen.updatePlayerScores();
+		  break;
+		}
 	    }
 
 	  else if (!noSet())
@@ -435,8 +678,10 @@ int  main(int argc, char* argv[])
 		  screen.highlightVector.clear();
 		  screen.updateDeckSize(deck);
 		  //reward
+		  //playerVector[0].giveScore(5);
 		  giveScore(playerVector[0],5);
 		  screen.updatePlayerScores();
+		  endGameCheck();
 		}
 
 	      else

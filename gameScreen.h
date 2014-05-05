@@ -34,8 +34,10 @@ class gameScreen
   void updateDeckSize(Deck deck);
   void updatePlayerScores();
   void deal(Deck &deck);
+  //void mapSize();
   //map<char, Card> getScreenMap();
 };
+
 
 void gameScreen::deal(Deck &deck)
 {
