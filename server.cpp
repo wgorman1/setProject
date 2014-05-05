@@ -55,7 +55,7 @@ pthread_t threadA[12];
 
 int polling;
 ssize_t readFromClient = 1;
-char buffer2[80];
+
 vector<Player> playerVector;
 map<char, Card> screenMap;
 
@@ -246,9 +246,11 @@ main (int argc, char *argv[])
 	    // {
 	    fds[nfds].fd = new_sd;
 	    fds[nfds].events = POLLIN;
-	    printf("inside if statement");
+	    //	    printf("inside if statement");
 	    //    printf("nfds = %d", nfds);
 	    nfds++;
+
+	    char buffer2[12];
 
 	    	   
 	    std:: string appendedName;
@@ -256,7 +258,7 @@ main (int argc, char *argv[])
 	    std:: string appendage = "1";
 	    
 	    std:: string name = (buffer2 + '\0');
-	    write(1, name.c_str(), name.size());
+	    //  write(1, name.c_str(), name.size());
 	    int result = 1;
 	    int counter = 1;
 
@@ -269,8 +271,8 @@ main (int argc, char *argv[])
 		      {
 			name = name + to_string(counter);
 			counter = counter + 1;
-			result = 1;
-			printf("name appended");
+		      	result = 1;
+			//printf("name appended");
 		      }
 		  }
 
