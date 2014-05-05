@@ -55,7 +55,7 @@ pthread_t threadA[12];
 
 int polling;
 ssize_t readFromClient = 1;
-
+char buffer2[80];
 vector<Player> playerVector;
 map<char, Card> screenMap;
 
@@ -250,14 +250,13 @@ main (int argc, char *argv[])
 	    //    printf("nfds = %d", nfds);
 	    nfds++;
 
-	    char   buffer2[80];
-	   
+	    	   
 	    std:: string appendedName;
-	    recv(fds[i].fd, buffer2, sizeof(buffer2), 0);
+	    recv(new_sd, buffer2, sizeof(buffer2), 0);
 	    std:: string appendage = "1";
 	    
 	    std:: string name = (buffer2 + '\0');
-	    //	    write(1, name.c_str(), name.size());
+	    write(1, name.c_str(), name.size());
 	    int result = 1;
 	    int counter = 1;
 
@@ -291,10 +290,10 @@ main (int argc, char *argv[])
 	      std::cout << ' ' << *it;
 	    std::cout << '\n';
 	    */
-	    string message = "You have joined as ";
-	    string end2 = "\n";
-	    string message2 = message + name + end2;
-	    std::cout << message2.c_str() << "\n";
+	    //string message = "You have joined as ";
+	    //string end2 = "\n";
+	    //string message2 = message + name + end2;
+	    //std::cout << message2.c_str() << "\n";
 	    // write(1, message2.c_str(), message2.size());
 	    // send(fds[i].fd, message2.c_str(), message2.size(), 0);
 	    // }
