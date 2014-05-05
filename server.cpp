@@ -141,7 +141,7 @@ main (int argc, char *argv[])
       /***********************************************************/
       /* Call poll() and wait 3 minutes for it to complete.      */
       /***********************************************************/
- //      printf("Waiting on poll()...\n");
+      //      printf("Waiting on poll()...\n");
       rc = poll(fds, nfds, timeout);
 
       /***********************************************************/
@@ -194,7 +194,7 @@ main (int argc, char *argv[])
 	      /*******************************************************/
 	      /* Listening descriptor is readable.                   */
 	      /*******************************************************/
-       //	      printf("  Listening socket is readable\n");
+	      //      printf("  Listening socket is readable\n");
 
 	      /*******************************************************/
 	      /* Accept all incoming connections that are            */
@@ -228,8 +228,8 @@ main (int argc, char *argv[])
 	    printf("  New incoming connection - %d\n", new_sd);
 	    fds[nfds].fd = new_sd;
 	    fds[nfds].events = POLLIN;
-	 
-	    //	    printf("nfds = %d", nfds);
+
+	    //    printf("nfds = %d", nfds);
 	    nfds++;
 
 	    /*****************************************************/
@@ -246,7 +246,7 @@ main (int argc, char *argv[])
 
 	  else
 	    {
-    //	      printf("  Descriptor %d is readable\n", fds[i].fd);
+	      //      printf("  Descriptor %d is readable\n", fds[i].fd);
 	      close_conn = FALSE;
 	      /*******************************************************/
 	      /* Receive all incoming data on this socket            */
@@ -255,22 +255,22 @@ main (int argc, char *argv[])
 
 	      //        do
 	      //  {
-	    /*****************************************************/
-	    /* Receive data on this connection until the         */
-	    /* recv fails with EWOULDBLOCK. If any other         */
-	    /* failure occurs, we will close the                 */
-	    /* connection.                                       */
-	    /*****************************************************/
-	    pthread_create(&threadA[nfds], NULL, task1, NULL);
+	      /*****************************************************/
+	      /* Receive data on this connection until the         */
+	      /* recv fails with EWOULDBLOCK. If any other         */
+	      /* failure occurs, we will close the                 */
+	      /* connection.                                       */
+	      /*****************************************************/
+	      pthread_create(&threadA[nfds], NULL, task1, NULL);
 
-	    //	  } while(TRUE);
+	      //  } while(TRUE);
 
-        /*******************************************************/
-        /* If the close_conn flag was turned on, we need       */
-        /* to clean up this active connection. This            */
-        /* clean up process includes removing the              */
-        /* descriptor.                                         */
-        /*******************************************************/
+	      /*******************************************************/
+	      /* If the close_conn flag was turned on, we need       */
+	      /* to clean up this active connection. This            */
+	      /* clean up process includes removing the              */
+	      /* descriptor.                                         */
+	      /*******************************************************/
     
 
 
@@ -318,43 +318,31 @@ void *task1(void *p)
 {
  
   char   buffer[80];
-
-  //  read(fds[i].fd, test, 300);
-  // std::string input = (test);
+  ssize_t bytesSent;
  
-  //  printf("%s has joined the game.", input);
-
   rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
-  //rc = read(fds[i].fd, buffer, sizeof(buffer));
-
-
-  //printf(buffer);
-
-   std:: string header = (buffer + '\0');
  
-   write(1, header.c_str(), header.size());
-  
-   printf("\n");
-  if (rc < 0)
+  std:: string header = (buffer + '\0');
+  write(1, header.c_str(), header.size());
+  printf("\n");
+ 
+ if (rc < 0)
     {
       if (errno != EWOULDBLOCK)
 	{
-	  //perror("  recv() failed");
-	  close_conn = TRUE;
+	 close_conn = TRUE;
 	}
     }
-     
-  /*  rc = send(fds[i].fd, buffer, sizeof(buffer), 0);
-  if(rc < 0)
-  m
-\[  {
-      perror(" send() failed");
-      close_conn = TRUE;
-      
-    }
-  */
-  send(fds[i].fd, header.c_str(), header.size(), 0);
 
+ 
+
+  for(int j = 1; j < current_size; j++)
+   {   
+    bytesSent = send(fds[j].fd, header.c_str(),header.size(), 0);      
+       }
+
+  printf("bytes sent: %s \n", header.c_str());
+ 
   if (close_conn)
     {
       close(fds[i].fd);
@@ -363,3 +351,9 @@ void *task1(void *p)
     }
 
 }
+/*
+void *task2(void *p)
+{
+  
+}
+*/

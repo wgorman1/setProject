@@ -1,5 +1,7 @@
 #include <string.h>
 #include <cstring>
+#include <cstdlib>
+#include <cctype>
 #include <unistd.h>
 #include <stdio.h>
 #include <netdb.h>
@@ -16,6 +18,12 @@
 #include <sstream>
 #include <time.h>
 #include <vector>
+#include <poll.h>
+#include <curses.h>
+
+#include "gameScreen.h"
+#include "global.h"
+
 using namespace std;
 
 
@@ -23,7 +31,7 @@ using namespace std;
 int main (int argc, char* argv[])
 {
   int listenFd, portNo;
-  bool loop = false;
+  struct pollfd myPoll[2];
   struct sockaddr_in svrAdd;
   struct hostent *server;
     
@@ -70,18 +78,43 @@ int main (int argc, char* argv[])
   //send stuff to server
  
   string name = argv[2];
-  
-  send(listenFd, name.c_str(),name.length(), 0); 
+  string message = " has joined the game.\n";
+  string message2 = name + message;
+  send(listenFd, message2.c_str(), message2.length(), 0); 
  
+  myPoll[0].fd = listenFd;
+  myPoll[0].events = POLLIN;
+
+  myPoll[1].fd = STDIN_FILENO;
+  myPoll[1].events = POLLIN;
 
   for(;;)
     {
-      char s[300];
-   
-      cout << "Enter stuff: ";
-      bzero(s, 301);
-      cin.getline(s, 300);
+      poll(myPoll, 2, -1);
       
-      write(listenFd, s, strlen(s));
-    }
+       
+      char s[300];
+      char v[300];
+      
+      //      cout << "Enter stuff: ";
+      bzero(s, 301);
+      bzero(v, 301);
+    
+      //      cin.getline(s, 300);
+      
+
+      if(myPoll[1].revents & POLLIN)
+      	{
+	  cin.getline(s, 300);
+	  write(listenFd, s, strlen(s));
+	}
+      if(myPoll[0].revents & POLLIN)
+	{
+	  
+	  int bytesReceived = recv(listenFd, v, sizeof(v),0);
+	  std:: string message = (v + '\0');
+	  printf("Message received: %s\n", message.c_str());
+	}
+   }
+  
 }
