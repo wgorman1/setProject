@@ -47,11 +47,11 @@ int main (int argc, char* argv[])
   struct sockaddr_in svrAdd;
   struct hostent *server;
     
-  if(argc != 3)
-    {
-      cerr<<"Syntax : ./play <port> [name]"<<endl;
-      return 0;
-    }
+  //if(argc != 3)
+  //{
+  //  cerr<<"Syntax : ./play <port> [name]"<<endl;
+  //  return 0;
+  //}
     
   portNo = atoi(argv[1]);
     
@@ -86,10 +86,16 @@ int main (int argc, char* argv[])
       cerr << "Cannot connect!" << endl;
       return 0;
     }
-    
+  char nameB[20];
+  string name;  
   //send stuff to server
- 
-  string name = argv[2];
+  if(argc == 2){
+    getlogin_r(nameB, sizeof(nameB)-1);
+    name = getlogin();
+    }
+  else{
+    name = argv[2];
+  }
   //  string message = " has joined the game.\n";
   // string message2 = name + message;
   send(listenFd, name.c_str(), name.length(), 0); 
