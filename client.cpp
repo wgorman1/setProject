@@ -128,7 +128,33 @@ int main (int argc, char* argv[])
   
 
   std:: cout << "Type go and press enter when ready\n";
+  
+  char v[300];
 
+  //      cout << "Enter stuff: ";
+  
+  bzero(v, 301);
+
+  ssize_t br = recv(listenFd, v, sizeof(v),0);
+  if(br > 0)
+    {
+      std:: string message = (v + '\0');
+      std:: string message2 = "FAILURE!\n";
+      if(message == "Start")
+	{
+	  //    printf("Message received: %s\n", message.c_str());
+	  screen.initializeScreen();
+	  refresh();
+	  sleep(1);
+
+
+	}
+      else{
+	printf("Message received: %s\n", message2.c_str());
+      }
+    }
+}
+      /*
   for(;;)
     {
       poll(myPoll, 2, -1);
@@ -172,5 +198,5 @@ int main (int argc, char* argv[])
 	    }
      	}
    }
-  
-}
+      */
+  //}
