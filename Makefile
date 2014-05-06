@@ -10,7 +10,7 @@ alt:alt.cpp
 	c++11 -o alt -Wall alt.cpp -lcurses
 
 client:client.cpp
-	c++11 -o client -Wall client.cpp
+	c++11 -o client -Wall client.cpp -lcurses
 
 server:server.cpp
 	c++11 -o server -Wall server.cpp -lpthread -lcurses
