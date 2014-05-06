@@ -86,7 +86,7 @@ main (int argc, char *argv[])
       std:: cout << i << endl;
       Sleep(1000);
       }*/
-  std:: cout << "Start!" << endl;
+  //  std:: cout << "Start!" << endl;
 
   /*************************************************************/
   /* Create an AF_INET6 stream socket to receive incoming      */
