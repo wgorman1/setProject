@@ -88,14 +88,20 @@ int main (int argc, char* argv[])
     }
   char nameB[20];
   string name;  
-  //send stuff to server
-  if(argc == 2){
-    getlogin_r(nameB, sizeof(nameB)-1);
-    name = getlogin();
+  char newName[5];
+  if(argv[2] == NULL){
+    getlogin_r(nameB, sizeof(nameB));
+   
+    newName[0] = nameB[0];
+    newName[1] = nameB[1];
+    newName[2] = ' ';
+    name = (newName + '\0');
     }
   else{
     name = argv[2];
   }
+
+  //  std::cout<<"NAME IS: " <<name<<'\n';
   //  string message = " has joined the game.\n";
   // string message2 = name + message;
   send(listenFd, name.c_str(), name.length(), 0); 
