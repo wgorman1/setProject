@@ -272,7 +272,7 @@ main (int argc, char *argv[])
 	    nfds++;
 	    
 	    clientCount = clientCount + 1;
-
+	    std::cout << "CLIENTCOUNT = " << clientCount << "\n";
 
 	    for(int m = 0; m < 80; m++)
               {
@@ -469,12 +469,15 @@ void *task1(void *p)
 
   std:: string startGame = "Start";
 
-
-  for(int j = 1; j <= current_size; j++)
+  if(flag == 1)
     {
+      std::cout << "2nd Check for clientCount = "<< clientCount << "\n";
+        for(int j = 1; j <= clientCount ; j++)
+       {
+      std::cout << "SENDING MESSAGE\n";
       send(fds[j].fd, startGame.c_str(), startGame.size(), 0);
+       }
     }
-
   //  printf("sent to clients: %s \n", startGame.c_str());
 
 

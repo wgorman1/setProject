@@ -1,3 +1,6 @@
+
+#define _POSIX_C_SOURCE >= 200112L
+
 #include <string.h>
 #include <cstring>
 #include <cstdlib>
@@ -6,46 +9,57 @@
 #include <stdio.h>
 #include <netdb.h>
 #include <sys/types.h>
+#include <sys/wait.h>
+
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
-#include <strings.h>
+#include <string.h>
 #include <stdlib.h>
 #include <string>
 #include <sstream>
 #include <time.h>
+#include <signal.h>
 #include <vector>
 #include <poll.h>
 #include <curses.h>
+#include <pthread.h>
+#include <errno.h>
+
 
 #include <algorithm>
 #include <vector>
 #include <map>
 #include <list>
 #include <iostream>
-/*
+
 #include "Card.h"
 #include "Player.h"
 #include "Card.h"
 #include "global.h"
 #include "Deck.h"
 #include "gameScreen.h"
-*/
+
+
 using namespace std;
+map<char, Card> screenMap;
+vector<Player> playerVector;
 
 
 int main (int argc, char* argv[])
 {
-
+ 
   
 
   int listenFd, portNo;
   struct pollfd myPoll[2];
   struct sockaddr_in svrAdd;
   struct hostent *server;
+
+  gameScreen screen;
     
   //if(argc != 3)
   //{
@@ -142,7 +156,19 @@ int main (int argc, char* argv[])
 	   if(br > 0)
 	    {
 	  std:: string message = (v + '\0');
-	  printf("Message received: %s\n", message.c_str());
+	  std:: string message2 = "FAILURE!\n";
+	  if(message == "Start")
+	    {
+	    //	  printf("Message received: %s\n", message.c_str());
+	      screen.initializeScreen();
+	      refresh();
+	      sleep(1);
+	    
+	      
+	    }
+	    else{
+	      printf("Message received: %s\n", message2.c_str());
+	    }
 	    }
      	}
    }
