@@ -49,7 +49,7 @@ struct sockaddr_in6   addr;
 struct pollfd fds[14];
 int    nfds = 1, current_size = 0, i, j;
 pthread_t threadA[12];
-//void *task1(void *);
+void *task1(void *);
 int clientCount=0;
 int polling;
 ssize_t readFromClient = 1;
@@ -329,6 +329,10 @@ main (int argc, char *argv[])
 	      {
 		std:: cout << "MADE IT INTO VECTOR FLAG\n";
 		flag = 1;
+		std:: string startMessage = "Start";
+		for(int j = 0; j < vectorSize; j++){
+		  send(fds[j].fd, startMessage.c_str(), startMessage.size(),0);
+		}
 	      }
 	   
 	    // std:: string startMessage = "Start";
@@ -365,8 +369,8 @@ main (int argc, char *argv[])
 	    /* Loop back up and accept another incoming          */
 	    /* connection                                        */
 	    /*****************************************************/
-	  } while (new_sd != -1);
-	    }
+	  } while (flag != 1);
+       }
 
 	  /*********************************************************/
 	  /* This is not the listening socket, therefore an        */
@@ -392,7 +396,7 @@ main (int argc, char *argv[])
 	      /* connection.                                       */
 	      /*****************************************************/
 
-	      void *task1(void *);
+	      //void *task1(void *);
 
 	      pthread_create(&threadA[nfds], NULL, task1, NULL);
 
@@ -453,10 +457,10 @@ void *task1(void *p)
   char   buffer[80];
 
 
-  rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
+  //rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
 
   std:: string header = (buffer + '\0');
-  write(1, header.c_str(), header.size());
+  //write(1, header.c_str(), header.size());
   printf("\n");
 
   if (rc < 0)
@@ -474,8 +478,8 @@ void *task1(void *p)
       std::cout << "2nd Check for clientCount = "<< clientCount << "\n";
         for(int j = 1; j <= clientCount ; j++)
        {
-      std::cout << "SENDING MESSAGE\n";
-      send(fds[j].fd, startGame.c_str(), startGame.size(), 0);
+	 std::cout << "SENDING MESSAGE\n";
+	 send(fds[j].fd, startGame.c_str(), startGame.size(), 0);
        }
     }
   //  printf("sent to clients: %s \n", startGame.c_str());
