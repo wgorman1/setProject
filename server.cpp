@@ -48,7 +48,7 @@ int    close_conn;
 struct sockaddr_in6   addr;
 struct pollfd fds[14];
 int    nfds = 1, current_size = 0, i, j;
-pthread_t threadA[12];
+pthread_t threadA[13];
 //void *task1(void *);
 int clientCount=0;
 int polling;
@@ -62,6 +62,8 @@ char buffer2[80];
 char nameBuffer[12];
 
 string nameArray[30];
+
+void *timerTask(void *);
 
 
 main (int argc, char *argv[])
@@ -80,6 +82,9 @@ main (int argc, char *argv[])
 
 
   std:: cout << "Timer = " << timer << "\n";
+
+  pthread_create(&threadA[1], NULL, timerTask, NULL);
+  
   /*
   for(int i = timer; i > 0; i--)
     {
@@ -394,7 +399,7 @@ main (int argc, char *argv[])
 
 	      void *task1(void *);
 
-	      pthread_create(&threadA[nfds], NULL, task1, NULL);
+	      pthread_create(&threadA[nfds+1], NULL, task1, NULL);
 
 	      //  } while(TRUE);
 
@@ -447,11 +452,31 @@ main (int argc, char *argv[])
 }
 
 
+void *timerTask(void *p)
+{
+  
+  std:: cout<< "TIMER STARTING\n";
+  for(int i = timer; i >= 0; i--)
+    {
+      std:: string time = to_string(i);
+      for(int j = 1; j <= clientCount ; j++)
+	{
+	  
+	  send(fds[j].fd, time.c_str(), time.size(), 0);
+	}
+
+      std:: cout << i << endl;
+      sleep(1);
+    }
+   
+  
+}
+
 void *task1(void *p)
 {
   std::cout << "MADE IT INTO TASK1\n";  
-  char   buffer[80];
-
+  
+  char buffer[80];
 
   rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
 

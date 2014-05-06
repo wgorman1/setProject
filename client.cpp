@@ -1,4 +1,3 @@
-
 //#define _POSIX_C_SOURCE >= 200112L
 
 
@@ -401,10 +400,11 @@ int main (int argc, char* argv[])
 
   //  std:: cout << "Type go and press enter when ready\n";
   
-  char v[300];
+  
 
   //      cout << "Enter stuff: ";
-  poll(myPoll, 1, -1);
+
+  /*  poll(myPoll, 1, -1);
 
   bzero(v, 301);
   if(myPoll[0].revents & POLLIN)
@@ -416,13 +416,51 @@ int main (int argc, char* argv[])
       std:: string message = (v + '\0');
       std:: string message2 = "FAILURE!\n";
       if(message == "Start")
-	{
-	  //mainGame();
-	  
-	  //    printf("Message received: %s\n", message.c_str());
-      
+      {*/
 
-	  Player p1("Chuck");
+          initscr();
+ 	  cbreak();
+          refresh();
+	 
+	  printw("time until game starts:\n");
+          int flag = 0;
+	  while(flag == 0)
+	    {
+	      refresh();
+	      //   printw("Time until game starts:\n");
+	      char v[2];
+
+	      recv(listenFd, v, sizeof(v),0);
+	      
+	      // std:: cout << "received\n";
+
+	      //refresh();
+
+	      std:: string message = (v + '\0');
+
+		  if(message == "0  ")
+		    {
+		      break;
+		    }
+		  else
+		    {
+		      // std:: cout<< message.c_str() << std::flush;
+		      printw(v);
+		      // printw("\n");
+		      printw("\r");
+		    }
+
+
+		  v[0] = ' ';
+		  v[1] = ' ';
+		  v[2] = ' ';
+		  //		   clear();
+		}
+
+	  clear();
+	  
+
+	  Player p1(name);
 	  playerVector.push_back(p1);
 
 	  Player p2("Will");
@@ -451,9 +489,10 @@ int main (int argc, char* argv[])
 
 	  gameScreen screen;
 
-	  screen.initializeScreen();
+          screen.initializeScreen();
+	 
           refresh();
-          sleep(1);
+
           screen.deal(deck);
           screen.updateDeckSize(deck);
           refresh();
@@ -641,61 +680,5 @@ int main (int argc, char* argv[])
 	  endwin();
 	  return 0;
 
-	
-
-
-
-	}
-      else{
-	printf("Message received: %s\n", message2.c_str());
-      }
-    }
-    }
-}
-      /*
-  for(;;)
-    {
-      poll(myPoll, 2, -1);
-      
-       
-      char s[300];
-      char v[300];
-      
-      //      cout << "Enter stuff: ";
-      bzero(s, 301);
-      bzero(v, 301);
-    
-      //           cin.getline(s, 300);
-      
-      
-      if(myPoll[1].revents & POLLIN)
-      	{
-	  cin.getline(s, 300);
-	  write(listenFd, s, strlen(s));
-	}
-      if(myPoll[0].revents & POLLIN)
-	{
-        
-	  ssize_t br = recv(listenFd, v, sizeof(v),0);
-	   if(br > 0)
-	    {
-	  std:: string message = (v + '\0');
-	  std:: string message2 = "FAILURE!\n";
-	  if(message == "Start")
-	    {
-	    //	  printf("Message received: %s\n", message.c_str());
-	      screen.initializeScreen();
-	      refresh();
-	      sleep(1);
-	    
-	      
-	    }
-	    else{
-	      printf("Message received: %s\n", message2.c_str());
-	    }
-	    }
-     	}
-   }
-      */
-  //}
-
+  
+        }
