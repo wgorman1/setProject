@@ -38,11 +38,9 @@
 #include "gameScreen.h"
 
 
-#define SERVER_PORT  8000
-
 #define TRUE             1
 #define FALSE            0
-
+int portNumber;
 int    len, rc, on = 1;
 int    listen_sd = -1, new_sd = -1;
 int    desc_ready, end_server = FALSE, compress_array = FALSE;
@@ -52,10 +50,10 @@ struct pollfd fds[14];
 int    nfds = 1, current_size = 0, i, j;
 pthread_t threadA[12];
 //void *task1(void *);
-
+int clientCount=0;
 int polling;
 ssize_t readFromClient = 1;
-
+int timer;
 vector<Player> playerVector;
 map<char, Card> screenMap;
 
@@ -66,6 +64,25 @@ main (int argc, char *argv[])
 {
 
   int    timeout;
+  portNumber = atoi(argv[1]);
+  Deck deck(cardArray);
+  if (argv[2] == NULL)
+	  {
+	    timer = 15;
+	  }  
+  else{
+    timer = atoi(argv[2]);
+  }
+
+
+  std:: cout << "Timer = " << timer << "\n";
+  /*
+  for(int i = timer; i > 0; i--)
+    {
+      std:: cout << i << endl;
+      Sleep(1000);
+      }*/
+  std:: cout << "Start!" << endl;
 
   /*************************************************************/
   /* Create an AF_INET6 stream socket to receive incoming      */
@@ -109,7 +126,7 @@ main (int argc, char *argv[])
   memset(&addr, 0, sizeof(addr));
   addr.sin6_family      = AF_INET6;
   memcpy(&addr.sin6_addr, &in6addr_any, sizeof(in6addr_any));
-  addr.sin6_port        = htons(SERVER_PORT);
+  addr.sin6_port        = htons(portNumber);
   rc = bind(listen_sd,
             (struct sockaddr *)&addr, sizeof(addr));
   if (rc < 0)
@@ -249,15 +266,18 @@ main (int argc, char *argv[])
 	    //	    printf("inside if statement");
 	    //    printf("nfds = %d", nfds);
 	    nfds++;
-
-	    char buffer2[12];
-
+	    clientCount = clientCount + 1;
+	    char buffer2[80];
+	    char nameBuffer[12];
 	    	   
 	    std:: string appendedName;
 	    recv(new_sd, buffer2, sizeof(buffer2), 0);
+	    for(int b = 0; b<12; b++)
+	      { nameBuffer[b] = buffer2[b];
+		}	    
 	    std:: string appendage = "1";
 	    
-	    std:: string name = (buffer2 + '\0');
+	    std:: string name = (nameBuffer + '\0');
 	    //  write(1, name.c_str(), name.size());
 	    int result = 1;
 	    int counter = 1;
@@ -286,6 +306,7 @@ main (int argc, char *argv[])
 	      }
 	    Player p1(name);
             playerVector.push_back(p1);
+	    
 	    // std::cout << "myvector contains:";
 
 	    /*	    for (std::vector<int>::iterator it = playerVector.begin() ; it != playerVector.end(); ++it)
@@ -408,15 +429,15 @@ void *task1(void *p)
 	}
     }
 
+ std:: string startGame = "Start";
  
  
-  for(int j = 1; j < current_size; j++)
-   {   
-   
-     send(fds[j].fd, header.c_str(),header.size(), 0);      
-       }
+   for(int j = 1; j <= current_size; j++)
+  {   
+     send(fds[j].fd, startGame.c_str(), startGame.size(), 0);      
+        }
 
-  printf("sent to clients: %s \n", header.c_str());
+   //  printf("sent to clients: %s \n", startGame.c_str());
  
   if (close_conn)
     {
