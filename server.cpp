@@ -57,6 +57,10 @@ int timer;
 vector<Player> playerVector;
 map<char, Card> screenMap;
 
+
+char buffer2[80];
+char nameBuffer[12];
+
 string nameArray[30];
 
 
@@ -267,9 +271,18 @@ main (int argc, char *argv[])
 	    //    printf("nfds = %d", nfds);
 	    nfds++;
 	    clientCount = clientCount + 1;
-	    char buffer2[80];
-	    char nameBuffer[12];
-	    	   
+
+
+	    for(int m = 0; m < 80; m++)
+              {
+                buffer2[m] = '\0';
+              }
+            for(int m =0; m < 12; m++)
+              {
+                nameBuffer[m] = '\0';
+              }
+    
+	   	   
 	    std:: string appendedName;
 	    recv(new_sd, buffer2, sizeof(buffer2), 0);
 	    for(int b = 0; b<12; b++)
@@ -307,6 +320,7 @@ main (int argc, char *argv[])
 	    Player p1(name);
             playerVector.push_back(p1);
 	    
+	  
 	    // std::cout << "myvector contains:";
 
 	    /*	    for (std::vector<int>::iterator it = playerVector.begin() ; it != playerVector.end(); ++it)
