@@ -56,7 +56,7 @@ ssize_t readFromClient = 1;
 int timer;
 vector<Player> playerVector;
 map<char, Card> screenMap;
-
+int flag;
 
 char buffer2[80];
 char nameBuffer[12];
@@ -270,6 +270,7 @@ main (int argc, char *argv[])
 	    //	    printf("inside if statement");
 	    //    printf("nfds = %d", nfds);
 	    nfds++;
+	    
 	    clientCount = clientCount + 1;
 
 
@@ -285,13 +286,14 @@ main (int argc, char *argv[])
 	   	   
 	    std:: string appendedName;
 	    recv(new_sd, buffer2, sizeof(buffer2), 0);
+	  
 	    for(int b = 0; b<12; b++)
 	      { nameBuffer[b] = buffer2[b];
 		}	    
 	    std:: string appendage = "1";
 	    
 	    std:: string name = (nameBuffer + '\0');
-	    //  write(1, name.c_str(), name.size());
+	  
 	    int result = 1;
 	    int counter = 1;
 
@@ -313,14 +315,35 @@ main (int argc, char *argv[])
 	      }
 	    
 	    nameArray[current_size] = name;
-	    for(int j=0; j < 10; j++)
+	    for(int j=0; j <= current_size; j++)
 	      {
 		std::cout << nameArray[j] << "\n";
 	      }
+	   
 	    Player p1(name);
-            playerVector.push_back(p1);
+	    playerVector.push_back(p1);
+	    int vectorSize = playerVector.size();
+	    std::cout << "VECTOR SIZE = " << vectorSize << "\n";
+
+	    if(vectorSize == 3)
+	      {
+		std:: cout << "MADE IT INTO VECTOR FLAG\n";
+		flag = 1;
+	      }
+	   
+	    // std:: string startMessage = "Start";
+	    // int vectorSize = playerVector.size();
 	    
-	  
+	    // if(vectorSize == 3)
+	    //  {
+	    //	for(int j =0; j < current_size; j++)
+	    //  {
+	    // send(fds[j].fd, startMessage.c_str(), startMessage.size(), 0);
+	    //	  }
+		// }
+	   
+ //	    std::cout << "Vector has " << playerVector.size() << " elements.\n";
+
 	    // std::cout << "myvector contains:";
 
 	    /*	    for (std::vector<int>::iterator it = playerVector.begin() ; it != playerVector.end(); ++it)
@@ -352,6 +375,7 @@ main (int argc, char *argv[])
 
 	  else
 	    {
+	      std::cout << "MADE IT INTO ELSE\n";
 	      //      printf("  Descriptor %d is readable\n", fds[i].fd);
 	      close_conn = FALSE;
 	      /*******************************************************/
@@ -425,8 +449,40 @@ main (int argc, char *argv[])
 
 void *task1(void *p)
 {
- 
+  std::cout << "MADE IT INTO TASK1\n";  
   char   buffer[80];
+
+
+  rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
+
+  std:: string header = (buffer + '\0');
+  write(1, header.c_str(), header.size());
+  printf("\n");
+
+  if (rc < 0)
+    {
+      if (errno != EWOULDBLOCK)
+        {
+	  close_conn = TRUE;
+        }
+    }
+
+  std:: string startGame = "Start";
+
+
+  for(int j = 1; j <= current_size; j++)
+    {
+      send(fds[j].fd, startGame.c_str(), startGame.size(), 0);
+    }
+
+  //  printf("sent to clients: %s \n", startGame.c_str());
+
+
+
+  /*
+  char   buffer[80];
+
+
 
  
   rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
@@ -442,17 +498,20 @@ void *task1(void *p)
 	 close_conn = TRUE;
 	}
     }
-
+  
  std:: string startGame = "Start";
  
- 
-   for(int j = 1; j <= current_size; j++)
-  {   
+ if(flag == 1)
+  {
+    std::cout << "MADE IT INTO FLAG\n";
+  for(int j = 0; j < nfds; j++)
+   { 
      send(fds[j].fd, startGame.c_str(), startGame.size(), 0);      
-        }
+   }  
+      }
 
-   //  printf("sent to clients: %s \n", startGame.c_str());
- 
+    printf("sent to clients: %s \n", startGame.c_str());
+  */
   if (close_conn)
     {
       close(fds[i].fd);

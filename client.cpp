@@ -111,6 +111,9 @@ int main (int argc, char* argv[])
 
   myPoll[1].fd = STDIN_FILENO;
   myPoll[1].events = POLLIN;
+  
+
+  std:: cout << "Type go and press enter when ready\n";
 
   for(;;)
     {
@@ -124,9 +127,9 @@ int main (int argc, char* argv[])
       bzero(s, 301);
       bzero(v, 301);
     
-      //      cin.getline(s, 300);
+      //           cin.getline(s, 300);
       
-
+      
       if(myPoll[1].revents & POLLIN)
       	{
 	  cin.getline(s, 300);
@@ -134,14 +137,14 @@ int main (int argc, char* argv[])
 	}
       if(myPoll[0].revents & POLLIN)
 	{
-	  
+        
 	  ssize_t br = recv(listenFd, v, sizeof(v),0);
-	  if(br > 0)
+	   if(br > 0)
 	    {
 	  std:: string message = (v + '\0');
 	  printf("Message received: %s\n", message.c_str());
 	    }
-	}
+     	}
    }
   
 }
