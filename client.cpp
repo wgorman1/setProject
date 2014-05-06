@@ -101,9 +101,7 @@ int main (int argc, char* argv[])
     name = argv[2];
   }
 
-  //  std::cout<<"NAME IS: " <<name<<'\n';
-  //  string message = " has joined the game.\n";
-  // string message2 = name + message;
+ 
   send(listenFd, name.c_str(), name.length(), 0); 
   
   
