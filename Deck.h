@@ -22,10 +22,10 @@ class Deck
   Deck();
   Deck(vector<Card> cardArray);
   //Deck(Card cardArray[]);
-  void shuffle();
+  void shuffle(int seed);
   Card nextCard();
   int deckSize();
-  void clearAndReshuffle();
+  void clearAndReshuffle(int seed);
   void putBack(Card card);
   //void checkNextCard();
 };
@@ -69,7 +69,7 @@ void Deck::putBack(Card card)
 
 
 
-void Deck::clearAndReshuffle()
+void Deck::clearAndReshuffle(int seed)
 {
   //map<char, Card> imap= screen.screenMap;
   //deck.shrink_to_fit();
@@ -103,7 +103,7 @@ void Deck::clearAndReshuffle()
   putBack(screenMap['l']);
   */
   deck.shrink_to_fit();
-  shuffle();
+  shuffle(time(0));
   /*
   screen.replaceCard('a',deck.nextCard());
   screen.replaceCard('b',deck.nextCard());
@@ -164,9 +164,9 @@ Deck::Deck(vector<Card> cardArray)
 
 }
 
-void Deck::shuffle()
+void Deck::shuffle(int seed)
 {
-  srand(time(0));
+  srand(seed);
   random_shuffle(deck.begin(), deck.end());
 }
 

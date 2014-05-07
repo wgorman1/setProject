@@ -345,11 +345,25 @@ int  main(int argc, char* argv[])
   playerVector.push_back(p6);
   */
 
+  int seed=time(0);
 
   Deck deck(cardArray);
   
-  //deck.shuffle();
- 
+  deck.shuffle(seed);
+
+  vector<char> allScreen;
+  allScreen.push_back('a');
+  allScreen.push_back('b');
+  allScreen.push_back('c');
+  allScreen.push_back('d');
+  allScreen.push_back('e');
+  allScreen.push_back('f');
+  allScreen.push_back('g');
+  allScreen.push_back('h');
+  allScreen.push_back('i');
+  allScreen.push_back('j'); 
+  allScreen.push_back('k');
+  allScreen.push_back('l');
 
   init_pair(1, COLOR_RED, COLOR_WHITE);
   init_pair(2, COLOR_BLUE, COLOR_WHITE);
@@ -440,14 +454,15 @@ int  main(int argc, char* argv[])
 	case 'l':
 	  screen.onOffHighlight('l');
 	  break;
-	  	  
+
+	  /*	  	  
 	case 'p':
 	  endwin();
 	  //animate();
 	  printMap(deck);
 	  //cout<<p1.score<<endl;
 	  break;
-	  
+	  */
 
 	case '6':
 	  //quit out of game
@@ -510,7 +525,13 @@ int  main(int argc, char* argv[])
 		}
 	      else
 		{
-		  deck.clearAndReshuffle();
+		  cardStruct bs;
+                  bs.highlightVector=allScreen;
+
+		  pthread_create(&thread1, NULL, threadedReplace, (void*)&bs);
+                  pthread_join(thread1,NULL);
+
+		  deck.clearAndReshuffle(seed);
 		  //deck.shuffle();
 		  screen.deal(deck);
 		  screen.updateDeckSize(deck);
@@ -544,13 +565,19 @@ int  main(int argc, char* argv[])
                   //as.scren=screen;
 		  as.highlightVector=screen.getHighlights();
 
+		  for (int k=0; k<3; k++)
+                    {
+                      //screen.replaceCard(screen.getHighlights()[k],deck.nextCard());
+                      screen.unhighlightCard(screen.highlightVector[k]);
+                    }
+
 		  pthread_create(&thread1, NULL, threadedReplace, (void*)&as);
 		  pthread_join(thread1,NULL);
 		  
 		  for (int k=0; k<3; k++)
 		    {
 		      screen.replaceCard(screen.getHighlights()[k],deck.nextCard());
-		      screen.unhighlightCard(screen.highlightVector[k]);
+		      //screen.unhighlightCard(screen.highlightVector[k]);
 		    }
 		  screen.highlightVector.clear();
 		  screen.updateDeckSize(deck);
