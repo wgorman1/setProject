@@ -387,7 +387,6 @@ int main (int argc, char* argv[])
   char myName[12];
   for(int i = 0; i < 12; i++)
     {
-
       myName[i] = '\0';
     }
 
@@ -396,8 +395,6 @@ int main (int argc, char* argv[])
  
   std:: string nameMessage = (myName);
   
- 
-
   /*  
   myPoll[0].fd = listenFd;
   myPoll[0].events = POLLIN;
@@ -421,67 +418,136 @@ int main (int argc, char* argv[])
 	  printw("Time until game starts:\n");
 
           int flag = 0;
+	  int check = 1;
 	  while(flag == 0)
 	    {
 	      refresh();
-	
+	      
 	      char v[2];
+	      for(int i = 0; i < 3; i++)
+		{
+		  v[i] = '\0';
+		}
+	      
 
 	      recv(listenFd, v, sizeof(v),0);
 	      
 	  
-	      std:: string message = (v + '\0');
-
-		  if(message == "0  ")
+	      std:: string message = (v+'\0');
+	    
+	      printw(v);
+	      printw(" ");
+	      printw("\r");
+	      if(message == "0")
 		    {
 		      break;
 		    }
-		  else
-		    {
+	      }
+
 		  
-		      printw(v);
-      
-		      printw("\r");
-		    }
-
-
-		  v[0] = ' ';
-		  v[1] = ' ';
-		  v[2] = ' ';
-		  //		   clear();
-		}
+		  // v[0] = ' ';
+		  // v[1] = ' ';		  
+		  
+		
 
 	  clear();
 	  
+      
+	  
+      
+             printw("Lets start!\n");
+	     char name1[12];
+             recv(listenFd, name1, sizeof(name1),0);
+	     std:: string n1 = (name1 + '\0');
+	     Player p1(n1);
+	     playerVector.push_back(p1);
 
+	     char name2[12];
+	     recv(listenFd, name2, sizeof(name2),0);
+	     std:: string n2 = (name2 + '\0');
+             Player p2(n2);
+             playerVector.push_back(p2);
+
+	     char name3[12];
+	     recv(listenFd, name3, sizeof(name3),0);
+	     std:: string n3 = (name3 + '\0');
+             Player p3(n3);
+             playerVector.push_back(p3);
+
+	     char name4[12];
+	     recv(listenFd, name4, sizeof(name4),0);
+	     std:: string n4 = (name4 + '\0');
+             Player p4(n4);
+             playerVector.push_back(p4);
+
+	     char name5[12];
+	     recv(listenFd, name5, sizeof(name5),0);
+	     std:: string n5 = (name5 + '\0');
+             Player p5(n5);
+             playerVector.push_back(p5);
+
+	     char name6[12];
+	     recv(listenFd, name6, sizeof(name6),0);
+	     std:: string n6 = (name6 + '\0');
+             Player p6(n6);
+             playerVector.push_back(p6);
+
+	     char name7[12];
+	     recv(listenFd, name7, sizeof(name7),0);
+	     std:: string n7 = (name7 + '\0');
+             Player p7(n7);
+             playerVector.push_back(p7);
+
+	     char name8[12];
+	     recv(listenFd, name8, sizeof(name8),0);
+	     std:: string n8 = (name8 + '\0');
+             Player p8(n8);
+             playerVector.push_back(p8);
+
+	     char name9[12];
+	     recv(listenFd, name9, sizeof(name9),0);
+	     std:: string n9 = (name9 + '\0');
+             Player p9(n9);
+             playerVector.push_back(p9);
+
+	     char name10[12];
+	     recv(listenFd, name10, sizeof(name10),0);
+	     std:: string n10 = (name10 + '\0');
+             Player p10(n10);
+             playerVector.push_back(p10);
+
+	     char name11[12];
+	     recv(listenFd, name11, sizeof(name11),0);
+	     std:: string n11 = (name11 + '\0');
+             Player p11(n11);
+             playerVector.push_back(p11);
+
+	     char name12[12];
+	     recv(listenFd, name12, sizeof(name12),0);
+	     std:: string n12 = (name12 + '\0');
+             Player p12(n12);
+             playerVector.push_back(p12);
+
+
+
+
+          
+	  /*
 	  Player p1(nameMessage);
-	  playerVector.push_back(p1);
-
-	  Player p2("Will");
+          playerVector.push_back(p1);
+	  Player p2("BOB");
 	  playerVector.push_back(p2);
-
-	  Player p3("Stephen");
-	  playerVector.push_back(p3);
-
-	  Player p4("Taylor");
-	  playerVector.push_back(p4);
-
-	  Player p5("Rick");
-	  playerVector.push_back(p5);
-
-	  Player p6("Steve");
-	  playerVector.push_back(p6);
-
+	  */
+	  
 	  Deck deck(cardArray);
 
-	  init_pair(1, COLOR_RED, COLOR_WHITE);
-	  init_pair(2, COLOR_BLUE, COLOR_WHITE);
-	  init_pair(3, COLOR_BLACK, COLOR_WHITE);
-	  init_pair(4, COLOR_GREEN, COLOR_BLACK);
-	  init_pair(5, COLOR_WHITE, COLOR_BLACK);
-	  init_pair(6, COLOR_BLACK, COLOR_BLACK);
+          init_pair(1, COLOR_RED, COLOR_WHITE);
+          init_pair(2, COLOR_BLUE, COLOR_WHITE);
+          init_pair(3, COLOR_BLACK, COLOR_WHITE);
+          init_pair(4, COLOR_GREEN, COLOR_BLACK);
+          init_pair(5, COLOR_WHITE, COLOR_BLACK);
+          init_pair(6, COLOR_BLACK, COLOR_BLACK);
 
-	  //	  gameScreen screen;
 
           screen.initializeScreen();
 	 

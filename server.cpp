@@ -46,7 +46,7 @@ int    listen_sd = -1, new_sd = -1;
 int    desc_ready, end_server = FALSE, compress_array = FALSE;
 int    close_conn;
 struct sockaddr_in6   addr;
-struct pollfd fds[14];
+struct pollfd fds[13];
 int    nfds = 1, current_size = 0, i, j;
 pthread_t threadA[13];
 //void *task1(void *);
@@ -450,7 +450,7 @@ void *timerTask(void *p)
   for(int i = timer; i >= 0; i--)
     {
       std:: string time = to_string(i);
-      for(int j = 1; j <= clientCount ; j++)
+      for(int j = 1; j <= clientCount; j++)
 	{
 	  
 	  send(fds[j].fd, time.c_str(), time.size(), 0);
@@ -459,21 +459,29 @@ void *timerTask(void *p)
       std:: cout << i << endl;
       sleep(1);
     }
+ 
   std::string nameString;
   std::string nameSize = to_string(vectorSize);
-  for(int l =1; l <= vectorSize; l++)
+  std::cout << "IN TIMER VECTOR SIZE IS: " << vectorSize << "\n";
+  if(vectorSize < 12)
     {
-      send(fds[l].fd, nameSize.c_str(), nameSize.size(), 0);
+      for(int m=vectorSize+1; m<=vectorSize;m++)
+	{
+	  nameArray[m] = "NULL";
+	}
     }
-
-
-     for(int k=0; k<vectorSize; k++)
+     for(int k=1; k<13; k++)
        {
+
 	 nameString = nameArray[k];
-      
-	for(int j =1; j <= vectorSize; j++)
+	
+	for(int j = 0; j < 12; j++)
 	  {
-	send(fds[j].fd, nameArray.c_str(), nameArray.size(), 0);
+	    nameString = nameArray[j];
+	    std::cout << "NAME BEING SENT: "<< nameString << "\n";
+
+	send(fds[k].fd, nameString.c_str(), nameString.size(), 0);
+       
 	  }
        }
 }
