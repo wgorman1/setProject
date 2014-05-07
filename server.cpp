@@ -505,6 +505,7 @@ void *task1(void *p)
 
   std:: string header = (buffer + '\0');
   write(1, header.c_str(), header.size());
+
   printf("\n");
 
   if (rc < 0)
@@ -515,54 +516,7 @@ void *task1(void *p)
         }
     }
 
- 
 
-  if(flag == 1)
-    {
-      std::cout << "2nd Check for clientCount = "<< clientCount << "\n";
-        for(int j = 1; j <= clientCount ; j++)
-       {
-      std::cout << "SENDING MESSAGE\n";
-      //      send(fds[j].fd, startGame.c_str(), startGame.size(), 0);
-       }
-    }
-  //  printf("sent to clients: %s \n", startGame.c_str());
-
-
-
-  /*
-  char   buffer[80];
-
-
-
- 
-  rc = recv(fds[i].fd, buffer, sizeof(buffer), 0);
- 
-  std:: string header = (buffer + '\0');
-  write(1, header.c_str(), header.size());
-  printf("\n");
- 
- if (rc < 0)
-    {
-      if (errno != EWOULDBLOCK)
-	{
-	 close_conn = TRUE;
-	}
-    }
-  
- std:: string startGame = "Start";
- 
- if(flag == 1)
-  {
-    std::cout << "MADE IT INTO FLAG\n";
-  for(int j = 0; j < nfds; j++)
-   { 
-     send(fds[j].fd, startGame.c_str(), startGame.size(), 0);      
-   }  
-      }
-
-    printf("sent to clients: %s \n", startGame.c_str());
-  */
   if (close_conn)
     {
       close(fds[i].fd);
@@ -573,3 +527,100 @@ void *task1(void *p)
 }
 
 
+bool isMatch(vector<char> selectedCards, gameScreen screen)
+{
+  int matches=0;
+
+  for (int i=0; i<4; i++)
+    {
+
+      if ((screenMap[selectedCards[0]].properties[i]==screenMap[selectedCards[1]].properties[i] && screenMap[selectedCards[1]].properties[i]==screenMap[selectedCards[2]].properties[i]) || (screenMap[selectedCards[0]].properties[i]!=screenMap[selectedCards[1]].properties[i] && screenMap[selectedCards[0]].properties[i]!=screenMap[selectedCards[2]].properties[i] && screenMap[selectedCards[1]].properties[i]!=screenMap[selectedCards[2]].properties[i]))
+        {
+          matches+=1;
+        }
+
+    }
+
+  if (matches>=4)
+    {
+      return true;
+    }
+
+  else
+    {
+      return false;
+    }
+}
+
+
+bool noSet()
+{
+  int matches=0;
+
+  Card test[12];
+  test[0]=screenMap['a'];
+  test[1]=screenMap['b'];
+  test[2]=screenMap['c'];
+  test[3]=screenMap['d'];
+  test[4]=screenMap['e'];
+  test[5]=screenMap['f'];
+  test[6]=screenMap['g'];
+  test[7]=screenMap['h'];
+  test[8]=screenMap['i'];
+  test[9]=screenMap['j'];
+  test[10]=screenMap['k'];
+  test[11]=screenMap['l'];
+  for (int x=0; x<12; x++)
+    {
+      for (int y=x+1; y<12; y++)
+        {
+          for (int z=y+1; z<12; z++)
+            {
+              matches=0;
+              for (int i=0; i<4; i++)
+                {
+
+                  if ((test[x].properties[i]==test[y].properties[i] && test[y].properties[i]==test[z].properties[i] && test[x].id!= 99) || (test[x].properties[i]!=test[y].properties[i] && test[x].properties[i]!=test[z].properties[i] && test[y].properties[i]!=test[z].properties[i] && test[x].id!= 99))
+
+                    {
+                      matches+=1;
+                    }
+
+                }
+              if (matches==4)
+                {
+                  move(38,0);
+                  //addstr(test[x].id.c_str());
+                  move(39,0);
+                  //addstr(test[y].id.c_str());
+                  move(40,0);
+                  //addstr(test[z].id.c_str());
+                  return false;
+                }
+            }
+
+        }
+    }
+
+  return true;
+}
+
+int fibonacci(int streak)
+{
+  int c, first =0, second=1, next;
+  for ( c = 0 ; c <= streak ; c++ )
+    {
+      if ( c < 1 )
+        next = c;
+      else
+        {
+          next = first + second;
+          first = second;
+          second = next;
+        }
+      //cout << next << endl;
+    }
+  return next;
+
+
+}

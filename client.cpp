@@ -406,16 +406,16 @@ int main (int argc, char* argv[])
   recv(listenFd, seedBuff, sizeof(seedBuff),0);
   //  std:: string seedString = (seedBuff);
   int seed = atoi(seedBuff);
-  std::cout << "SEED: "<< seed << "\n";
+  // std::cout << "SEED: "<< seed << "\n";
     
           initscr();
  	  cbreak();
           refresh();       
 
 	  	  
-	  printw("SEED: ");
-	  printw(seedBuff+'\0');
-	  printw("\n");
+	  //	  printw("SEED: ");
+	  // printw(seedBuff+'\0');
+	  // printw("\n");
 	  printw("You have joined the game as: ");
 	  printw(myName+'\0');
 	  printw("\n");
@@ -615,6 +615,24 @@ int main (int argc, char* argv[])
 
 	   	  
 	  Deck deck(cardArray);
+	  screen.initializeScreen();
+
+          refresh();
+          deck.shuffle(seed);
+      
+	  vector<char> allScreen;
+	  allScreen.push_back('a');
+	  allScreen.push_back('b');
+	  allScreen.push_back('c');
+	  allScreen.push_back('d');
+	  allScreen.push_back('e');
+	  allScreen.push_back('f');
+	  allScreen.push_back('g');
+	  allScreen.push_back('h');
+	  allScreen.push_back('i');
+	  allScreen.push_back('j');
+	  allScreen.push_back('k');
+	  allScreen.push_back('l');
 
           init_pair(1, COLOR_RED, COLOR_WHITE);
           init_pair(2, COLOR_BLUE, COLOR_WHITE);
@@ -625,9 +643,8 @@ int main (int argc, char* argv[])
 
 
           screen.initializeScreen();
-	 
-          refresh();
-
+	  refresh();
+	  sleep(1);
           screen.deal(deck);
           screen.updateDeckSize(deck);
           refresh();
@@ -743,7 +760,13 @@ int main (int argc, char* argv[])
 			}
 		      else
 			{
-			  deck.clearAndReshuffle();
+			  cardStruct bs;
+			  bs.highlightVector=allScreen;
+
+	  pthread_create(&thread1, NULL, threadedReplace, (void*)&bs);
+			  pthread_join(thread1,NULL);
+
+			  deck.clearAndReshuffle(seed);
 			  //deck.shuffle();
 			  screen.deal(deck);
 			  screen.updateDeckSize(deck);
