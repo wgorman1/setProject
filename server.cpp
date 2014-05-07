@@ -459,8 +459,23 @@ void *timerTask(void *p)
       std:: cout << i << endl;
       sleep(1);
     }
-   
-  
+  std::string nameString;
+  std::string nameSize = to_string(vectorSize);
+  for(int l =1; l <= vectorSize; l++)
+    {
+      send(fds[l].fd, nameSize.c_str(), nameSize.size(), 0);
+    }
+
+
+     for(int k=0; k<vectorSize; k++)
+       {
+	 nameString = nameArray[k];
+      
+	for(int j =1; j <= vectorSize; j++)
+	  {
+	send(fds[j].fd, nameArray.c_str(), nameArray.size(), 0);
+	  }
+       }
 }
 
 void *task1(void *p)
