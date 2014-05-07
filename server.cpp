@@ -273,73 +273,81 @@ main (int argc, char *argv[])
 	    fds[nfds].fd = new_sd;
 	    fds[nfds].events = POLLIN;
 	   
-	    
-	    clientCount = clientCount + 1;
-	    std::cout << "CLIENTCOUNT = " << clientCount << "\n";
-
-	    for(int m = 0; m < 80; m++)
-              {
-                buffer2[m] = '\0';
-              }
-
-            for(int m =0; m < 12; m++)
-              {
-                nameBuffer[m] = '\0';
-              }
-    
-	    	   
-	    std:: string appendedName;
-	    
-	    recv(new_sd, buffer2, sizeof(buffer2), 0);
-	  
-	    for(int b = 0; b<12; b++)
-	      { nameBuffer[b] = buffer2[b];
-		}	    
-	    std:: string appendage = "1";
-	    
-	    std:: string name = (nameBuffer + '\0');
-	
-	    send(fds[nfds].fd, name.c_str(), name.size(), 0);
-	    
-
-	    int result = 1;
-	    int counter = 1;
-
-	    while(result == 1)
+	     if(vectorSize < 12)
 	      {
-		result = 0;
-		for(int j=0; j<12;j++)
-		  {
-		    if(name == nameArray[j])
-		      {
-			name = name + to_string(counter);
-			counter = counter + 1;
-		      	result = 1;
-			//printf("name appended");
-		      }
-		  }
+	    		std:: string success = "SUCCESS";
+	      send(fds[nfds].fd, success.c_str(), success.size(), 0);
 
 		
-	      }
-	    
-	    nameArray[current_size] = name;
-	    for(int j=0; j <= current_size; j++)
-	      {
-		std::cout << nameArray[j] << "\n";
-	      }
-	    
-	    Player p1(name);
-	    playerVector.push_back(p1);
-	    vectorSize = playerVector.size();
-	    std::cout << "VECTOR SIZE = " << vectorSize << "\n";
+		clientCount = clientCount + 1;
+		std::cout << "CLIENTCOUNT = " << clientCount << "\n";
 
-	    if(vectorSize == 3)
-	      {
-		std:: cout << "MADE IT INTO VECTOR FLAG\n";
-		flag = 1;
-	      }
+		for(int m = 0; m < 80; m++)
+		  {
+		    buffer2[m] = '\0';
+		  }
 
-	    nfds++;
+		for(int m =0; m < 12; m++)
+		  {
+		    nameBuffer[m] = '\0';
+		  }
+    
+	    	   
+		std:: string appendedName;
+		
+		recv(new_sd, buffer2, sizeof(buffer2), 0);
+		
+		for(int b = 0; b<12; b++)
+		  {
+		    nameBuffer[b] = buffer2[b];
+		  }	    
+		std:: string appendage = "1";
+	    
+		std:: string name = (nameBuffer + '\0');
+       
+		int result = 1;
+		int counter = 1;
+
+		while(result == 1)
+		  {
+		    result = 0;
+		    for(int j=0; j<12;j++)
+		      {
+			if(name == nameArray[j])
+			  {
+			    name = name + to_string(counter);
+			    counter = counter + 1;
+			    result = 1;
+			    //printf("name appended");
+			  }
+		      }
+
+		
+		  }
+		send(fds[nfds].fd, name.c_str(), name.size(), 0);
+	    
+		nameArray[current_size] = name;
+		for(int j=0; j <= current_size; j++)
+		  {
+		    std::cout << nameArray[j] << "\n";
+		  }
+		
+		Player p1(name);
+		playerVector.push_back(p1);
+		vectorSize = playerVector.size();
+		std::cout << "VECTOR SIZE = " << vectorSize << "\n";
+		
+		if(vectorSize == 3)
+		  {
+		    std:: cout << "MADE IT INTO VECTOR FLAG\n";
+		    flag = 1;
+		  }
+	       }
+	   else{
+	      std:: string failMessage = "FAILURE";
+	      send(fds[nfds].fd, failMessage.c_str(), failMessage.size(), 0); 
+	      }
+		nfds++;
     
 	    //string message = "You have joined as ";
 	    //string end2 = "\n";

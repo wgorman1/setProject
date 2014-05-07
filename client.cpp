@@ -56,65 +56,8 @@ using namespace std;
 //vector<Player> playerVector;
 map<char, Card> screenMap;
 vector<Player> playerVector;
-
+gameScreen screen;
 Card c;
-
-int millisleep(unsigned msecs) {
-  struct timespec t = {msecs / 1000, (msecs % 1000) * 1000000};
-  return clock_nanosleep(CLOCK_REALTIME, 0, &t, nullptr);
-}
-
-void animate()
-{
-  string frame1l1="xxxxxxxxxxxxxx";
-  string frame1l2="xxxxxxxxxxxxxxx";
-  string frame1l3="xxxxxxxxxxxxxxx";
-  string frame1l4="xxxxxxxxxxxxxxx";
-  string frame1l5="xxxxxxxxxxxxxxx";
-
-  string frame2l1=" xxxxxxxxxxxxx ";
-  string frame2l2=" xxxxxxxxxxxxx ";
-  string frame2l3=" xxxxxxxxxxxxx ";
-  string frame2l4=" xxxxxxxxxxxxx ";
-  string frame2l5=" xxxxxxxxxxxxx ";
-
-  string frame3l1="  xxxxxxxxxxx  ";
-  string frame3l2="  xxxxxxxxxxx  ";
-  string frame3l3="  xxxxxxxxxxx  ";
-  string frame3l4="  xxxxxxxxxxx  ";
-  string frame3l5="  xxxxxxxxxxx  ";
-
-  string frame4l1="   xxxxxxxxx   ";
-  string frame4l2="   xxxxxxxxx   ";
-  string frame4l3="   xxxxxxxxx   ";
-  string frame4l4="   xxxxxxxxx   ";
-  string frame4l5="   xxxxxxxxx   ";
-
-  string frame5l1="    xxxxxxx    ";
-  string frame5l2="    xxxxxxx    ";
-  string frame5l3="    xxxxxxx    ";
-  string frame5l4="    xxxxxxx    ";
-  string frame5l5="    xxxxxxx    ";
-
-  string frame6l1="     xxxxx     ";
-  string frame6l2="     xxxxx     ";
-  string frame6l3="     xxxxx     ";
-  string frame6l4="     xxxxx     ";
-  string frame6l5="     xxxxx     ";
-
-  string frame7l1="      xxx      ";
-  string frame7l2="      xxx      ";
-  string frame7l3="      xxx      ";
-  string frame7l4="      xxx      ";
-  string frame7l5="      xxx      ";
-
-  string frame8l1="       x       ";
-  string frame8l2="       x       ";
-  string frame8l3="       x       ";
-  string frame8l4="       x       ";
-  string frame8l5="       x       ";
-
-}
 
 
 void finishGame()
@@ -286,6 +229,26 @@ void printMap( Deck deck)
 
   //cout<<sizeof(deck);
 }
+int fibonacci(int streak)
+{
+  int c, first =0, second=1, next;
+  for ( c = 0 ; c <= streak ; c++ )
+    {
+      if ( c < 1 )
+        next = c;
+      else
+        {
+          next = first + second;
+          first = second;
+          second = next;
+        }
+      //cout << next << endl;
+    }
+  return next;
+
+
+}
+
 
 void giveScore(Player &player, int scorei)
 {
@@ -299,11 +262,10 @@ void giveScore(Player &player, int scorei)
 
   else if (scorei>0 && player.streak>0)
     {
-      //player.streak+=1;
-      player.score+= scorei + (2 * player.streak);
       player.streak+=1;
+      player.score+= scorei + (fibonacci(player.streak));
+      //player.streak+=1;
     }
-
   else if (scorei>0 && player.streak==0)
     {
       //reset all other players streaks
@@ -316,26 +278,47 @@ void giveScore(Player &player, int scorei)
       player.streak=1;
     }
 }
+ 
 
+struct cardStruct
+{
+  vector<char> highlightVector;
+};
+
+void* threadedReplace(void *cardStructi)
+{
+  //struct cardStruct* crd = (struct cardStruct*) cardStructi;
+
+  struct cardStruct *crd= (cardStruct*)cardStructi;
+
+  //char let= crd->letter;
+  //Card car= crd->card;
+  //gameScreen scr= crd->scren;
+  vector<char> vec= crd->highlightVector;
+  //cout<<let<<endl;
+  //free(crd);
+  //endwin();
+  //screen.replaceCard(screen.getHighlights()[let],car);
+  //screen.unhighlightCard(screen.highlightVector[let]);
+  screen.animate(vec);
+  //screen.unhighlightCard(let);
+  //screen.replaceCard(let,car);
+  //screen.unhighlightCard(let);
+  //refresh();
+  return 0;
+
+}
 
 
 int main (int argc, char* argv[])
 {
  
-     
+  pthread_t thread1;
 
   int listenFd, portNo;
   //  struct pollfd myPoll[2];
   struct sockaddr_in svrAdd;
   struct hostent *server;
-
- 
-
-  //if(argc != 3)
-  //{
-  //  cerr<<"Syntax : ./play <port> [name]"<<endl;
-  //  return 0;
-  //}
     
   portNo = atoi(argv[1]);
     
@@ -370,6 +353,19 @@ int main (int argc, char* argv[])
       cerr << "Cannot connect!" << endl;
       return 0;
     }
+
+
+  char status[7];
+  recv(listenFd, status, sizeof(status),0);
+  std:: string st = (status + '\0');
+  if(st == "FAILURE")
+    {
+      endwin();
+      std:: cout<< "CANNOT CONNECT - GAME FULL\n";
+      exit (EXIT_FAILURE);
+    }
+
+
   char nameB[20];
   string name;  
   char newName[3];
@@ -388,14 +384,19 @@ int main (int argc, char* argv[])
  
   send(listenFd, name.c_str(), name.length(), 0); 
  
-  char myName[10];
+  char myName[12];
+  for(int i = 0; i < 12; i++)
+    {
+
+      myName[i] = '\0';
+    }
+
 
   recv(listenFd, myName, sizeof(myName),0);
  
   std:: string nameMessage = (myName);
   
  
-  int k = sizeof(myName);
 
   /*  
   myPoll[0].fd = listenFd;
@@ -404,28 +405,26 @@ int main (int argc, char* argv[])
   myPoll[1].fd = STDIN_FILENO;
   myPoll[1].events = POLLIN;
   */
-
+  
           initscr();
  	  cbreak();
           refresh();
 
 
-	  for(int i=0; i<10; i++)
-	    {
-	      printw(myName[i]);
-	    }
+       
 
-
-	  printw("size of myname = %d ", k);
+	  	  
+       
 	  printw("You have joined the game as: ");
 	  printw(myName+'\0');
 	  printw("\n");
 	  printw("Time until game starts:\n");
+
           int flag = 0;
 	  while(flag == 0)
 	    {
 	      refresh();
-	      //   printw("Time until game starts:\n");
+	
 	      char v[2];
 
 	      recv(listenFd, v, sizeof(v),0);
@@ -455,7 +454,7 @@ int main (int argc, char* argv[])
 	  clear();
 	  
 
-	  Player p1(name);
+	  Player p1(nameMessage);
 	  playerVector.push_back(p1);
 
 	  Player p2("Will");
@@ -482,7 +481,7 @@ int main (int argc, char* argv[])
 	  init_pair(5, COLOR_WHITE, COLOR_BLACK);
 	  init_pair(6, COLOR_BLACK, COLOR_BLACK);
 
-	  gameScreen screen;
+	  //	  gameScreen screen;
 
           screen.initializeScreen();
 	 
@@ -557,12 +556,7 @@ int main (int argc, char* argv[])
 		  break;
 
 
-		case 'p':
-		  endwin();
-		  //animate();
-		  printMap(deck);
-		  //cout<<p1.score<<endl;
-		  break;
+		
 
 		case '6':
 		  //quit out of game
@@ -575,28 +569,28 @@ int main (int argc, char* argv[])
 		  int q;
 		  //q= getch();
 
-          do
-            {
-              q=getch();
+		  do
+		 {
+		   q=getch();
 
-              if (q=='y')
-                {
-                  endwin();
-                  exit(0);
-                  break;
+		   if (q=='y')
+		     {
+		       endwin();
+		       exit(0);
+		       break;
 
-                }
-	      else if (q=='n')
-                {
-                  move(29,4);
-                  addstr("                          ");
-                  break;
+		     }
+		   else if (q=='n')
+		     {
+		       move(29,4);
+		       addstr("                          ");
+		       break;
 
-                }
-
-	    }
-	  while (q!='y' || q!='n');
-	  break;
+		     }
+		   
+		 }
+		  while (q!='y' || q!='n');
+		  break;
 
 		case 'x':
 		  if(noSet())
@@ -632,13 +626,29 @@ int main (int argc, char* argv[])
 		      if(isMatch(screen.getHighlights(),screen))
 			{
 
+
+			  //char a=screen.getHighlights()[0];
+			  //Card a1=deck.nextCard();
+			  cardStruct as;
+			  //as.letter=a;
+			  //as.card=a1;
+			  //as.scren=screen;
+			  as.highlightVector=screen.getHighlights();
+
 			  for (int k=0; k<3; k++)
 			    {
-			      //screen.clearCard(screen.getHighlights()[k]);
-     screen.replaceCard(screen.getHighlights()[k],deck.nextCard());
+			      //screen.replaceCard(screen.getHighlights()[k],deck.nextCard());
 			      screen.unhighlightCard(screen.highlightVector[k]);
-			      //screen.unhighlightCard(screen.getHighlights()[k]);
-			      //screen.onOffHighlight(screen.highlightVector[k]);
+			    }
+
+
+		  pthread_create(&thread1, NULL, threadedReplace, (void*)&as);
+			  pthread_join(thread1,NULL);
+
+			  for (int k=0; k<3; k++)
+			    {
+			      screen.replaceCard(screen.getHighlights()[k],deck.nextCard());
+			      //screen.unhighlightCard(screen.highlightVector[k]);
 			    }
 			  screen.highlightVector.clear();
 			  screen.updateDeckSize(deck);
@@ -648,6 +658,7 @@ int main (int argc, char* argv[])
 			  screen.updatePlayerScores();
 			  endGameCheck();
 			}
+
 		      else
 			{
 
@@ -663,6 +674,8 @@ int main (int argc, char* argv[])
 			}
 		    }
 		  break;
+
+
 
 		default:
 		  {
