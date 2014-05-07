@@ -274,6 +274,30 @@ void giveScore(Player &player, int scorei)
 
 }
 
+void findPlayer(string name, int score)
+{
+  for (int i=0; i<(int)playerVector.size(); i++)
+    {
+      if (playerVector[i].name==name)
+        {
+          //Player *retp= (*Player)malloc(sizeof *retp);
+          //*retp= playerVector[i];
+          //return retp;
+          giveScore(playerVector[i],score);
+
+        }
+
+
+    }
+
+  //Player p1;
+  //return p1;
+  //Player p1= find(playerVector.begin(), playerVector.end(), name);
+  //return p1;
+}
+
+
+
 struct cardStruct
 {
   vector<char> highlightVector;
@@ -520,7 +544,9 @@ int  main(int argc, char* argv[])
 	    {
 	      if (deck.deckSize()<=12)
 		{
-		  giveScore(playerVector[0],10);
+		  //Player pp1=findPlayer("0");
+		  //giveScore(findPlayer("0"),10);
+		  findPlayer("0", 10);
 		  finishGame();
 		}
 	      else
@@ -545,7 +571,9 @@ int  main(int argc, char* argv[])
 	  else if (!noSet())
 	    {
 	      //penalize
-	      giveScore(playerVector[0],-5);
+	      //Player pp1=findPlayer("0");
+	      //giveScore(&pp1,-5);
+	      findPlayer("0",-5);
 	      screen.updatePlayerScores();
 	      break;
 	    }
@@ -583,7 +611,9 @@ int  main(int argc, char* argv[])
 		  screen.updateDeckSize(deck);
 		  //reward
 		  //playerVector[0].giveScore(5);
-		  giveScore(playerVector[0],5);
+		  //Player pp1=findPlayer("0");
+		  findPlayer("0",5);
+		  //giveScore(&findPlayer("0"),5);
 		  screen.updatePlayerScores();
 		  endGameCheck();
 		}
@@ -598,7 +628,9 @@ int  main(int argc, char* argv[])
 		    }
 		  screen.highlightVector.clear();
 		  //penalize
-		  giveScore(playerVector[0],-3);
+		  findPlayer("0",-3);
+		  //Player pp1=findPlayer("0");
+		  //giveScore(&findPlayer("0"),-3);
 		  screen.updatePlayerScores();
 		}
 	    }
