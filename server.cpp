@@ -61,8 +61,9 @@ int flag;
 char buffer2[80];
 char nameBuffer[12];
 
-string nameArray[12];
+string nameArray[13];
 int vectorSize;
+unsigned int deckSeed;
 
 void *timerTask(void *);
 
@@ -85,19 +86,17 @@ main (int argc, char *argv[])
   std:: cout << "Timer = " << timer << "\n";
 
   pthread_create(&threadA[1], NULL, timerTask, NULL);
-  
-  /*
-  for(int i = timer; i > 0; i--)
-    {
-      std:: cout << i << endl;
-      Sleep(1000);
-      }*/
-  //  std:: cout << "Start!" << endl;
+ 
+  /* initialize random seed: */
+  srand (time(NULL));
 
-  /*************************************************************/
-  /* Create an AF_INET6 stream socket to receive incoming      */
-  /* connections on                                            */
-  /*************************************************************/
+  /* generate secret number between 1 and 10: */
+  deckSeed = rand() % 100 + 1; 
+  
+ std::cout<<"SEED: " << deckSeed << "\n";
+  
+
+  /* Create an AF_INET6 stream socket to receive incoming */
   listen_sd = socket(AF_INET6, SOCK_STREAM, 0);
   if (listen_sd < 0)
     {
@@ -342,6 +341,9 @@ main (int argc, char *argv[])
 		    std:: cout << "MADE IT INTO VECTOR FLAG\n";
 		    flag = 1;
 		  }
+		std::string seed = to_string(deckSeed);
+		send(fds[nfds].fd, seed.c_str(), seed.size(), 0); 
+
 	       }
 	   else{
 	      std:: string failMessage = "FAILURE";
@@ -463,28 +465,35 @@ void *timerTask(void *p)
   std::string nameString;
   std::string nameSize = to_string(vectorSize);
   std::cout << "IN TIMER VECTOR SIZE IS: " << vectorSize << "\n";
-  if(vectorSize < 12)
+   if(vectorSize < 12)
     {
-      for(int m=vectorSize+1; m<=vectorSize;m++)
+      for(int m=vectorSize+1; m<=12;m++)
 	{
-	  nameArray[m] = "NULL";
+	  nameArray[m] = "Robot";
+  	}
 	}
-    }
-     for(int k=1; k<13; k++)
-       {
-
-	 nameString = nameArray[k];
-	
-	for(int j = 0; j < 12; j++)
+   
+     for(int k=1; k<=vectorSize; k++)
+       {	
+	for(int j = 1; j <= 12; j++)
 	  {
+	    if(j == k)
+	      {
+
+	      }
+	    else{
 	    nameString = nameArray[j];
 	    std::cout << "NAME BEING SENT: "<< nameString << "\n";
-
+	    
 	send(fds[k].fd, nameString.c_str(), nameString.size(), 0);
-       
-	  }
+	char b[10];
+	recv(fds[k].fd, b, sizeof(b), 0); 
+	    }
+	    }
+	       }
+          return 0;
        }
-}
+
 
 void *task1(void *p)
 {
@@ -506,7 +515,7 @@ void *task1(void *p)
         }
     }
 
-  std:: string startGame = "Start";
+ 
 
   if(flag == 1)
     {
@@ -514,7 +523,7 @@ void *task1(void *p)
         for(int j = 1; j <= clientCount ; j++)
        {
       std::cout << "SENDING MESSAGE\n";
-      send(fds[j].fd, startGame.c_str(), startGame.size(), 0);
+      //      send(fds[j].fd, startGame.c_str(), startGame.size(), 0);
        }
     }
   //  printf("sent to clients: %s \n", startGame.c_str());
@@ -560,7 +569,7 @@ void *task1(void *p)
       fds[i].fd = -1;
       compress_array = TRUE;
     }
-
+  return 0;
 }
 
 

@@ -391,8 +391,8 @@ int main (int argc, char* argv[])
     }
 
 
-  recv(listenFd, myName, sizeof(myName),0);
- 
+  int n = recv(listenFd, myName, sizeof(myName),0);
+  myName[n] = '\0';
   std:: string nameMessage = (myName);
   
   /*  
@@ -402,143 +402,218 @@ int main (int argc, char* argv[])
   myPoll[1].fd = STDIN_FILENO;
   myPoll[1].events = POLLIN;
   */
-  
+  char seedBuff[100];
+  recv(listenFd, seedBuff, sizeof(seedBuff),0);
+  //  std:: string seedString = (seedBuff);
+  int seed = atoi(seedBuff);
+  std::cout << "SEED: "<< seed << "\n";
+    
           initscr();
  	  cbreak();
-          refresh();
-
-
-       
+          refresh();       
 
 	  	  
-       
+	  printw("SEED: ");
+	  printw(seedBuff+'\0');
+	  printw("\n");
 	  printw("You have joined the game as: ");
 	  printw(myName+'\0');
 	  printw("\n");
 	  printw("Time until game starts:\n");
 
-          int flag = 0;
-	  int check = 1;
-	  while(flag == 0)
-	    {
+        
+	  
+	  char v[2];
+	  //	  while(v[0] != '1')
+	   
+	  for(;;){
 	      refresh();
+	      //     printw("Time until game starts:\n");
+
+	      //printw(" ");
+	      //	      refresh();
 	      
-	      char v[2];
-	      for(int i = 0; i < 3; i++)
+
+	       for(int i = 0; i < 2; i++)
 		{
 		  v[i] = '\0';
 		}
 	      
 
 	      recv(listenFd, v, sizeof(v),0);
-	      
+	      //	      v[g] = '\0';
 	  
-	      std:: string message = (v+'\0');
+	     std:: string message = (v);
 	    
 	      printw(v);
 	      printw(" ");
 	      printw("\r");
 	      if(message == "0")
 		    {
+		      printw("0");
+	 
+		      refresh();
 		      break;
-		    }
-	      }
+		      }
+	      //     refresh();
+	     
+	  }
 
 		  
-		  // v[0] = ' ';
-		  // v[1] = ' ';		  
-		  
-		
+			
 
 	  clear();
 	  
       
 	  
       
-             printw("Lets start!\n");
-	     char name1[12];
-             recv(listenFd, name1, sizeof(name1),0);
-	     std:: string n1 = (name1 + '\0');
-	     Player p1(n1);
+	  //             printw("Lets start!\n");
+	  
+	     //	     Player p1(nameMessage);
+	     // playerVector.push_back(p1);
+
+
+	   /*  char name1[12];
+             int num1 = recv(listenFd, name1, sizeof(name1),0);
+             name1[num1] = '\0';
+	     std:: string n1 = (name1);*/
+	     Player p1(nameMessage);
 	     playerVector.push_back(p1);
 
+	     
 	     char name2[12];
-	     recv(listenFd, name2, sizeof(name2),0);
-	     std:: string n2 = (name2 + '\0');
-             Player p2(n2);
-             playerVector.push_back(p2);
+	     int num2 = recv(listenFd, name2, sizeof(name2),0);
+	     name2[num2] = '\0';
+	     std:: string n2 = (name2);
+	     send(listenFd, n2.c_str(), n2.length(), 0);
+	     if(n2!= "Robot")
+	       {
+	      Player p2(n2);
+	      playerVector.push_back(p2);
+	       }
 
+
+	      
 	     char name3[12];
-	     recv(listenFd, name3, sizeof(name3),0);
+	     int num3 = recv(listenFd, name3, sizeof(name3),0);
+	     name3[num3] = '\0';
 	     std:: string n3 = (name3 + '\0');
+	     send(listenFd, n3.c_str(), n3.length(), 0);
+             if(n3!= "Robot")
+               {
              Player p3(n3);
              playerVector.push_back(p3);
+	       }
 
+	     
 	     char name4[12];
-	     recv(listenFd, name4, sizeof(name4),0);
+	     int num4 = recv(listenFd, name4, sizeof(name4),0);
+	     name4[num4] = '\0';
 	     std:: string n4 = (name4 + '\0');
-             Player p4(n4);
+             send(listenFd, n4.c_str(), n4.length(), 0);
+             if(n4!= "Robot")
+               {
+		 Player p4(n4);
              playerVector.push_back(p4);
+	       }
 
 	     char name5[12];
-	     recv(listenFd, name5, sizeof(name5),0);
+	     int num5 = recv(listenFd, name5, sizeof(name5),0);
+	     name5[num5] = '\0';
 	     std:: string n5 = (name5 + '\0');
-             Player p5(n5);
+             send(listenFd, n5.c_str(), n5.length(), 0);
+             if(n5!= "Robot")
+               {
+		 Player p5(n5);
              playerVector.push_back(p5);
+	       }
 
 	     char name6[12];
-	     recv(listenFd, name6, sizeof(name6),0);
+	     int num6 = recv(listenFd, name6, sizeof(name6),0);
+	     name6[num6] = '\0';
 	     std:: string n6 = (name6 + '\0');
-             Player p6(n6);
+	     send(listenFd, n6.c_str(), n6.length(), 0);
+             if(n6!= "Robot")
+               {
+		 Player p6(n6);
              playerVector.push_back(p6);
+	       }
 
 	     char name7[12];
-	     recv(listenFd, name7, sizeof(name7),0);
+	     int num7 = recv(listenFd, name7, sizeof(name7),0);
+	     name7[num7] = '\0';
 	     std:: string n7 = (name7 + '\0');
-             Player p7(n7);
+             send(listenFd, n7.c_str(), n7.length(), 0);
+             if(n7!= "Robot")
+               {
+		 Player p7(n7);
              playerVector.push_back(p7);
+	       }
 
 	     char name8[12];
-	     recv(listenFd, name8, sizeof(name8),0);
+	     int num8 = recv(listenFd, name8, sizeof(name8),0);
+	     name8[num8] = '\0';
 	     std:: string n8 = (name8 + '\0');
-             Player p8(n8);
+	     send(listenFd, n8.c_str(), n8.length(), 0);
+             if(n8!= "Robot")
+               {
+		 Player p8(n8);
              playerVector.push_back(p8);
+	       }
 
 	     char name9[12];
-	     recv(listenFd, name9, sizeof(name9),0);
+	     int num9 = recv(listenFd, name9, sizeof(name9),0);
+	     name9[num9] = '\0';
 	     std:: string n9 = (name9 + '\0');
-             Player p9(n9);
+             send(listenFd, n9.c_str(), n9.length(), 0);
+             if(n9!= "Robot")
+               {
+		 Player p9(n9);
              playerVector.push_back(p9);
+	       }
 
 	     char name10[12];
-	     recv(listenFd, name10, sizeof(name10),0);
+	     int num10 = recv(listenFd, name10, sizeof(name10),0);
+	     name10[num10] = '\0';
 	     std:: string n10 = (name10 + '\0');
-             Player p10(n10);
+             send(listenFd, n10.c_str(), n10.length(), 0);
+             if(n10!= "Robot")
+               {
+		 Player p10(n10);
              playerVector.push_back(p10);
+	       }
 
 	     char name11[12];
-	     recv(listenFd, name11, sizeof(name11),0);
+	     int num11 = recv(listenFd, name11, sizeof(name11),0);
+	     name11[num11] = '\0';
 	     std:: string n11 = (name11 + '\0');
-             Player p11(n11);
+	     send(listenFd, n11.c_str(), n11.length(), 0);
+             if(n11!= "Robot")
+               {
+		 Player p11(n11);
              playerVector.push_back(p11);
+	       }
 
 	     char name12[12];
-	     recv(listenFd, name12, sizeof(name12),0);
+	     int num12 = recv(listenFd, name12, sizeof(name12),0);
+	     name12[num12] = '\0';
 	     std:: string n12 = (name12 + '\0');
-             Player p12(n12);
+             send(listenFd, n12.c_str(), n12.length(), 0);
+             if(n12!= "Robot")
+               {
+		 Player p12(n12);
              playerVector.push_back(p12);
+	       }
 
-
-
-
+       
+	    
+	     
+	     
           
-	  /*
-	  Player p1(nameMessage);
-          playerVector.push_back(p1);
-	  Player p2("BOB");
-	  playerVector.push_back(p2);
-	  */
 	  
+	 
+
+	   	  
 	  Deck deck(cardArray);
 
           init_pair(1, COLOR_RED, COLOR_WHITE);
