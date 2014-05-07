@@ -325,7 +325,7 @@ int main (int argc, char* argv[])
      
 
   int listenFd, portNo;
-  struct pollfd myPoll[2];
+  //  struct pollfd myPoll[2];
   struct sockaddr_in svrAdd;
   struct hostent *server;
 
@@ -372,7 +372,7 @@ int main (int argc, char* argv[])
     }
   char nameB[20];
   string name;  
-  char newName[5];
+  char newName[3];
   if(argv[2] == NULL){
     getlogin_r(nameB, sizeof(nameB));
    
@@ -387,8 +387,16 @@ int main (int argc, char* argv[])
 
  
   send(listenFd, name.c_str(), name.length(), 0); 
+ 
+  char myName[10];
+
+  recv(listenFd, myName, sizeof(myName),0);
+ 
+  std:: string nameMessage = (myName);
   
-  
+ 
+  int k = sizeof(myName);
+
   /*  
   myPoll[0].fd = listenFd;
   myPoll[0].events = POLLIN;
@@ -400,8 +408,19 @@ int main (int argc, char* argv[])
           initscr();
  	  cbreak();
           refresh();
-	 
-	  printw("time until game starts:\n");
+
+
+	  for(int i=0; i<10; i++)
+	    {
+	      printw(myName[i]);
+	    }
+
+
+	  printw("size of myname = %d ", k);
+	  printw("You have joined the game as: ");
+	  printw(myName+'\0');
+	  printw("\n");
+	  printw("Time until game starts:\n");
           int flag = 0;
 	  while(flag == 0)
 	    {
@@ -411,10 +430,7 @@ int main (int argc, char* argv[])
 
 	      recv(listenFd, v, sizeof(v),0);
 	      
-	      // std:: cout << "received\n";
-
-	      //refresh();
-
+	  
 	      std:: string message = (v + '\0');
 
 		  if(message == "0  ")
@@ -423,9 +439,9 @@ int main (int argc, char* argv[])
 		    }
 		  else
 		    {
-		      // std:: cout<< message.c_str() << std::flush;
+		  
 		      printw(v);
-		      // printw("\n");
+      
 		      printw("\r");
 		    }
 

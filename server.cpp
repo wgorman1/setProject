@@ -61,7 +61,8 @@ int flag;
 char buffer2[80];
 char nameBuffer[12];
 
-string nameArray[30];
+string nameArray[12];
+int vectorSize;
 
 void *timerTask(void *);
 
@@ -251,6 +252,7 @@ main (int argc, char *argv[])
 	    /* failure on accept will cause us to end the        */
 	    /* server.                                           */
 	    /*****************************************************/
+	   
 	    new_sd = accept(listen_sd, NULL, NULL);
 	    if (new_sd < 0)
 	      {
@@ -268,13 +270,9 @@ main (int argc, char *argv[])
 	    /*****************************************************/
 	    printf("  New incoming connection - %d\n", new_sd);
 	   
-	    //	    if(current_size < 13)
-	    // {
 	    fds[nfds].fd = new_sd;
 	    fds[nfds].events = POLLIN;
-	    //	    printf("inside if statement");
-	    //    printf("nfds = %d", nfds);
-	    nfds++;
+	   
 	    
 	    clientCount = clientCount + 1;
 	    std::cout << "CLIENTCOUNT = " << clientCount << "\n";
@@ -283,13 +281,15 @@ main (int argc, char *argv[])
               {
                 buffer2[m] = '\0';
               }
+
             for(int m =0; m < 12; m++)
               {
                 nameBuffer[m] = '\0';
               }
     
-	   	   
+	    	   
 	    std:: string appendedName;
+	    
 	    recv(new_sd, buffer2, sizeof(buffer2), 0);
 	  
 	    for(int b = 0; b<12; b++)
@@ -298,7 +298,10 @@ main (int argc, char *argv[])
 	    std:: string appendage = "1";
 	    
 	    std:: string name = (nameBuffer + '\0');
-	  
+	
+	    send(fds[nfds].fd, name.c_str(), name.size(), 0);
+	    
+
 	    int result = 1;
 	    int counter = 1;
 
@@ -324,10 +327,10 @@ main (int argc, char *argv[])
 	      {
 		std::cout << nameArray[j] << "\n";
 	      }
-	   
+	    
 	    Player p1(name);
 	    playerVector.push_back(p1);
-	    int vectorSize = playerVector.size();
+	    vectorSize = playerVector.size();
 	    std::cout << "VECTOR SIZE = " << vectorSize << "\n";
 
 	    if(vectorSize == 3)
@@ -335,26 +338,9 @@ main (int argc, char *argv[])
 		std:: cout << "MADE IT INTO VECTOR FLAG\n";
 		flag = 1;
 	      }
-	   
-	    // std:: string startMessage = "Start";
-	    // int vectorSize = playerVector.size();
-	    
-	    // if(vectorSize == 3)
-	    //  {
-	    //	for(int j =0; j < current_size; j++)
-	    //  {
-	    // send(fds[j].fd, startMessage.c_str(), startMessage.size(), 0);
-	    //	  }
-		// }
-	   
- //	    std::cout << "Vector has " << playerVector.size() << " elements.\n";
 
-	    // std::cout << "myvector contains:";
-
-	    /*	    for (std::vector<int>::iterator it = playerVector.begin() ; it != playerVector.end(); ++it)
-	      std::cout << ' ' << *it;
-	    std::cout << '\n';
-	    */
+	    nfds++;
+    
 	    //string message = "You have joined as ";
 	    //string end2 = "\n";
 	    //string message2 = message + name + end2;
@@ -363,9 +349,6 @@ main (int argc, char *argv[])
 	    // send(fds[i].fd, message2.c_str(), message2.size(), 0);
 	    // }
 
-	    //    else{
-	    //  nfds++;
-	    // }
 	    /*****************************************************/
 	    /* Loop back up and accept another incoming          */
 	    /* connection                                        */
