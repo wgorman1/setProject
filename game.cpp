@@ -2,7 +2,7 @@
 //Charles Eswine
 
 #define _POSIX_C_SOURCE >= 200112L
-
+#define _BSD_SOURCE
 #include <algorithm>
 #include <vector>
 #include <sstream>
@@ -37,6 +37,7 @@ using namespace std;
 #include <errno.h>
 #include <cctype>
 #include <map>
+#include <pthread.h>
 
 #define SOCKET_ERROR        -1
 #define BUFFER_SIZE         100
@@ -44,205 +45,10 @@ using namespace std;
 
 
 Card c;
-//map<char, Card> screenMap { {'a',c}, {'b',c}, {'c',c}, {'d',c}, {'e',c}, {'f',c}, {'g',c}, {'h',c}, {'i',c}, {'j',c}, {'k',c}, {'l',c} };
 
 map<char, Card> screenMap;
 vector<Player> playerVector;
-
-//int idn=1;
-
-int millisleep(unsigned msecs) {
-  struct timespec t = {msecs / 1000, (msecs % 1000) * 1000000};
-  return clock_nanosleep(CLOCK_REALTIME, 0, &t, nullptr);
-}
-
-
-
-void animate()
-{
-
-
-  /*
-  clock_t t, k;
-
-  //t=clock();
-
-  //k=clock();
-  time(&t);
-  time(&k);
-
-  cout<<CLOCKS_PER_SEC<<endl;
-  cout<<difftime(t,k)<<endl;
-  cout<<( ( (float)difftime(t,k))/CLOCKS_PER_SEC)<<endl;
-
-  for(;;)
-    {
-      //t=clock();
-      time(&t);
-      cout<<( ( (float)difftime(t,k))/CLOCKS_PER_SEC)<<endl;
-
-      if ((((float)difftime(t,k))/CLOCKS_PER_SEC)==0.05)
-	{
-	  cout<<"x"<<endl;
-
-	}
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.10)
-        {
-	  cout<<"xx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.15)
-        {
-	  cout<<"xxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.20)
-        {
-	  cout<<"xxxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.25)
-        {
-	  cout<<"xxxxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.30)
-        {
-	  cout<<"xxxxxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.35)
-        {
-	  cout<<"xxxxxxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.40)
-        {
-	  cout<<"xxxxxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.45)
-        {
-	  cout<<"xxxxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.50)
-        {
-	  cout<<"xxxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.55)
-        {
-	  cout<<"xxx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.60)
-        {
-	  cout<<"xx"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.65)
-        {
-	  cout<<"x"<<endl;
-
-        }
-
-      else if ((((float)difftime(k,t))/CLOCKS_PER_SEC)==0.70)
-        {
-	  cout<<"x"<<endl;
-
-        }
-
-
-
-    }
-
-  */
-
-
-  /*
-  struct itimerval value;
-
-  int which= ITIMER_REAL;
-
-  int time1= getitimer(which, &value);
-
-  value.it_value.tv_sec=0;
-  value.it_value.tv_usec=50;
-
-  cout<<"1 is "<<time1<<endl;
-
-  int time2= setitimer(which, &value, NULL);
-
-  cout<<"2 is "<<time2<<endl;  
-  */
-
-  //pthread_t thread1;
-
-  //pthread_create(&thread1, NULL, Producer1,);
-
-
-  string frame1l1="xxxxxxxxxxxxxx";
-  string frame1l2="xxxxxxxxxxxxxxx";
-  string frame1l3="xxxxxxxxxxxxxxx";
-  string frame1l4="xxxxxxxxxxxxxxx";
-  string frame1l5="xxxxxxxxxxxxxxx";
-
-  string frame2l1=" xxxxxxxxxxxxx ";
-  string frame2l2=" xxxxxxxxxxxxx ";
-  string frame2l3=" xxxxxxxxxxxxx ";
-  string frame2l4=" xxxxxxxxxxxxx ";
-  string frame2l5=" xxxxxxxxxxxxx ";
-
-  string frame3l1="  xxxxxxxxxxx  ";
-  string frame3l2="  xxxxxxxxxxx  ";
-  string frame3l3="  xxxxxxxxxxx  ";
-  string frame3l4="  xxxxxxxxxxx  ";
-  string frame3l5="  xxxxxxxxxxx  ";
-
-  string frame4l1="   xxxxxxxxx   ";
-  string frame4l2="   xxxxxxxxx   ";
-  string frame4l3="   xxxxxxxxx   ";
-  string frame4l4="   xxxxxxxxx   ";
-  string frame4l5="   xxxxxxxxx   ";
-
-  string frame5l1="    xxxxxxx    ";
-  string frame5l2="    xxxxxxx    ";
-  string frame5l3="    xxxxxxx    ";
-  string frame5l4="    xxxxxxx    ";
-  string frame5l5="    xxxxxxx    ";
-
-  string frame6l1="     xxxxx     ";
-  string frame6l2="     xxxxx     ";
-  string frame6l3="     xxxxx     ";
-  string frame6l4="     xxxxx     ";
-  string frame6l5="     xxxxx     ";
-
-  string frame7l1="      xxx      ";
-  string frame7l2="      xxx      ";
-  string frame7l3="      xxx      ";
-  string frame7l4="      xxx      ";
-  string frame7l5="      xxx      ";
-
-  string frame8l1="       x       ";
-  string frame8l2="       x       ";
-  string frame8l3="       x       ";
-  string frame8l4="       x       ";
-  string frame8l5="       x       ";
-
-}
+gameScreen screen;
 
 void finishGame()
 {
@@ -251,9 +57,9 @@ void finishGame()
 
   int rank=1;
 
-  for (unsigned int i=playerVector.size()-1; i>0; i--)
+  for (int i=(int)playerVector.size()-1; i>=0; i--)
     {
-      if (i==playerVector.size()-1 || playerVector[i].score == playerVector[i+1].score)
+      if (i==(int)playerVector.size()-1 || playerVector[i].score == playerVector[i+1].score)
 	{
 	  cout<<rank<<". "<<playerVector[i].name;
 
@@ -416,6 +222,25 @@ void printMap( Deck deck)
   //cout<<sizeof(deck);
 }
 
+int fibonacci(int streak)
+{
+  int c, first =0, second=1, next;
+  for ( c = 0 ; c <= streak ; c++ )
+    {
+      if ( c < 1 )
+	next = c;
+      else
+	{
+	  next = first + second;
+	  first = second;
+	  second = next;
+	}
+      //cout << next << endl;
+    }
+  return next;
+
+
+}
 
 void giveScore(Player &player, int scorei)
 {
@@ -429,9 +254,9 @@ void giveScore(Player &player, int scorei)
 
   else if (scorei>0 && player.streak>0)
     {
-      //player.streak+=1;
-      player.score+= scorei + (2 * player.streak);
       player.streak+=1;
+      player.score+= scorei + (fibonacci(player.streak));
+      //player.streak+=1;
     }
 
   else if (scorei>0 && player.streak==0)
@@ -449,14 +274,58 @@ void giveScore(Player &player, int scorei)
 
 }
 
+struct cardStruct
+{
+  vector<char> highlightVector;
+  //char letter;
+  //Card card;
+  //gameScreen scren;
+};
+
+void* threadedReplace(void *cardStructi)
+{
+  //struct cardStruct* crd = (struct cardStruct*) cardStructi;
+
+  struct cardStruct *crd= (cardStruct*)cardStructi;
+
+  //char let= crd->letter;
+  //Card car= crd->card;
+  //gameScreen scr= crd->scren;
+  vector<char> vec= crd->highlightVector;
+  //cout<<let<<endl;
+  //free(crd);
+  //endwin();
+  //screen.replaceCard(screen.getHighlights()[let],car);
+  //screen.unhighlightCard(screen.highlightVector[let]);
+  screen.animate(vec);
+  //screen.unhighlightCard(let);
+  //screen.replaceCard(let,car);
+  //screen.unhighlightCard(let);
+  //refresh();
+  return 0;
+
+}
+
 
 int  main(int argc, char* argv[])
 {
+
+  pthread_t thread1;  
+
   //map<char, Card> screenMap;
   //string d="...............";
 
   //int ch;  
 
+  for (int m=0; m<12; m++)
+    {
+      Player p1(to_string(m));
+      playerVector.push_back(p1);
+
+
+    }
+
+  /*
   Player p1("Chuck");
   playerVector.push_back(p1);
 
@@ -474,7 +343,7 @@ int  main(int argc, char* argv[])
 
   Player p6("Steve");
   playerVector.push_back(p6);
-
+  */
 
 
   Deck deck(cardArray);
@@ -489,7 +358,7 @@ int  main(int argc, char* argv[])
   init_pair(5, COLOR_WHITE, COLOR_BLACK);  
   init_pair(6, COLOR_BLACK, COLOR_BLACK);
 
-  gameScreen screen;
+  //gameScreen screen;
   //attrset(COLOR_PAIR(1));
   //bkgd(COLOR_PAIR(1));
   //populateScreen();
@@ -571,7 +440,6 @@ int  main(int argc, char* argv[])
 	case 'l':
 	  screen.onOffHighlight('l');
 	  break;
-
 	  	  
 	case 'p':
 	  endwin();
@@ -666,14 +534,23 @@ int  main(int argc, char* argv[])
 	    {
 	      if(isMatch(screen.getHighlights(),screen))
 		{
-	      
+
+		        
+		  //char a=screen.getHighlights()[0];
+		  //Card a1=deck.nextCard();		  
+		  cardStruct as;
+		  //as.letter=a;
+                  //as.card=a1;
+                  //as.scren=screen;
+		  as.highlightVector=screen.getHighlights();
+
+		  pthread_create(&thread1, NULL, threadedReplace, (void*)&as);
+		  pthread_join(thread1,NULL);
+		  
 		  for (int k=0; k<3; k++)
 		    {
-		      //screen.clearCard(screen.getHighlights()[k]);
 		      screen.replaceCard(screen.getHighlights()[k],deck.nextCard());
 		      screen.unhighlightCard(screen.highlightVector[k]);
-		      //screen.unhighlightCard(screen.getHighlights()[k]);
-		      //screen.onOffHighlight(screen.highlightVector[k]);
 		    }
 		  screen.highlightVector.clear();
 		  screen.updateDeckSize(deck);
