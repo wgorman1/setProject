@@ -1,6 +1,5 @@
 //#define _POSIX_C_SOURCE >= 200112L
 
-
 #include <string.h>
 #include <cstring>
 #include <cstdlib>
@@ -350,6 +349,7 @@ int main (int argc, char* argv[])
     
   if (checker < 0)
     {
+      endwin();
       cerr << "Cannot connect!" << endl;
       return 0;
     }
@@ -362,7 +362,7 @@ int main (int argc, char* argv[])
     {
       endwin();
       std:: cout<< "CANNOT CONNECT - GAME FULL\n";
-      exit (EXIT_FAILURE);
+      exit (0);
     }
 
 
@@ -790,7 +790,7 @@ int main (int argc, char* argv[])
 		      if(isMatch(screen.getHighlights(),screen))
 			{
 
-
+			  sort(screen.highlightVector.begin(), screen.highlightVector.end());
 			  //char a=screen.getHighlights()[0];
 			  //Card a1=deck.nextCard();
 			  cardStruct as;
